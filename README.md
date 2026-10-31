@@ -43,7 +43,7 @@ O app é um arquivo estático e roda em qualquer hospedagem. Pelo GitHub Pages:
 ### 4. Primeiro acesso
 
 1. O Willian abre o link, toca em **Fazer meu cadastro** e usa o nome **Willian Celso**, exatamente assim. O progresso antigo aparece na hora.
-2. Depois, envie para o time o link e o código do time.
+2. Depois, mande para o time o link de convite (em **Time → Link de convite**). Quem abre por ele não precisa digitar o código do time.
 
 ## Dia a dia
 

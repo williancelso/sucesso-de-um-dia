@@ -311,6 +311,8 @@ textarea.pag-texto:focus{border:0}
 .cfg{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:end}
 .cfg .full,.cfg .primary{grid-column:1/-1}
 .cfg .primary{justify-self:start}
+.link-convite{margin:12px 0 14px;padding:12px 14px;background:var(--marfim);border:1px solid var(--linha);font-size:13.5px;line-height:1.5;overflow-wrap:anywhere;user-select:all}
+.convite-nota{margin-top:14px;padding:12px 14px;background:var(--branco);border-left:2px solid var(--dourado);font-size:14px}
 .pessoas{list-style:none;margin:16px 0 0;padding:0}
 .pessoa{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linha)}
 .pessoa .pnome{flex:1 1 10rem;min-width:0;font-weight:500;overflow-wrap:anywhere}
@@ -385,11 +387,12 @@ textarea.pag-texto:focus{border:0}
     <div id="loginCadastro" hidden>
       <h2>Primeiro acesso</h2>
       <p class="lead">Você vai criar um PIN de 4 dígitos, só números. Ele protege as suas marcações e o seu Diário.</p>
+      <p class="convite-nota" id="conviteNota" hidden>Você chegou pelo convite do time. É só escrever o seu nome e criar o PIN.</p>
       <form class="form" id="formCadastro" novalidate>
         <div class="field"><label for="cNome">Nome e sobrenome</label><input type="text" id="cNome" autocomplete="username" autocapitalize="words" spellcheck="false" maxlength="60"></div>
         <div class="field"><label for="cPin">Crie um PIN de 4 dígitos</label><input type="password" id="cPin" class="pin" inputmode="numeric" autocomplete="new-password" maxlength="4" pattern="[0-9]*"></div>
         <div class="field"><label for="cPin2">Repita os 4 dígitos</label><input type="password" id="cPin2" class="pin" inputmode="numeric" autocomplete="new-password" maxlength="4" pattern="[0-9]*"></div>
-        <div class="field"><label for="cCodigo">Código do time</label><input type="text" id="cCodigo" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><p class="campo-dica">Peça a quem te enviou o link.</p></div>
+        <div class="field" id="campoCodigo"><label for="cCodigo">Código do time</label><input type="text" id="cCodigo" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><p class="campo-dica">Peça a quem te enviou o link.</p></div>
         <p class="err" id="cErr" role="alert" hidden></p>
         <button type="submit" class="primary" id="cBtn">Criar meu cadastro</button>
       </form>
@@ -559,6 +562,11 @@ textarea.pag-texto:focus{border:0}
           <button type="submit" class="primary">Salvar ajustes</button>
         </form>
 
+        <h3 style="margin-top:36px">Link de convite</h3>
+        <p class="hint">Mande este link para o time. Quem abre por ele não precisa digitar o código do time. Se você trocar o código, o link muda junto.</p>
+        <p class="link-convite" id="linkConvite"></p>
+        <button type="button" class="primary" id="copiarConvite">Copiar link de convite</button>
+
         <h3 style="margin-top:36px">Pessoas</h3>
         <p class="hint">Zere o PIN de quem esqueceu (a pessoa entra com o PIN novo e pode trocar depois) ou remova um cadastro. Remover apaga também os dias e o Diário da pessoa.</p>
         <ul class="pessoas" id="pessoas"></ul>
@@ -634,7 +642,7 @@ const GRUPOS=[
 const TABS=['hoje','espelho','time'];
 const PAINEIS=[...TABS,'conta']; // Meu desafio abre pelo topo
 const DEFAULT_CFG={inicio:'2026-10-06',dias:74,codigo:null};
-const K_SESSAO='sucesso:sessao',K_NOME='sucesso:nome',K_CACHE='sucesso:cache',K_ABA='sucesso:aba',K_RASCUNHO='sucesso:rascunho';
+const K_CONVITE='sucesso:convite',K_SESSAO='sucesso:sessao',K_NOME='sucesso:nome',K_CACHE='sucesso:cache',K_ABA='sucesso:aba',K_RASCUNHO='sucesso:rascunho';
 const DAY=864e5;
 const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -813,7 +821,11 @@ async function fazerCadastro(e){
   erroLogin('c','');const b=$('#cBtn');b.disabled=true;b.textContent='Criando…';
   const r=await rpc('cadastrar',{p_nome:nome,p_pin:pin,p_codigo:cod});
   b.disabled=false;b.textContent='Criar meu cadastro';
-  if(!r.ok){erroLogin('c',msg(r));return}
+  if(!r.ok){
+    if(r.erro==='codigo_invalido'&&ls.get(K_CONVITE)){ls.del(K_CONVITE);$('#cCodigo').value='';$('#campoCodigo').hidden=false;$('#conviteNota').hidden=true;erroLogin('c','Este convite é antigo. Peça o código novo a quem te enviou o link.');$('#cCodigo').focus();return}
+    erroLogin('c',msg(r));return
+  }
+  ls.del(K_CONVITE);
   entrou(r.token,nome);await carregar();
   toast(r.importado?'Bem-vindo. O seu progresso anterior já está aqui.':'Cadastro feito. Bom desafio!');
 }
@@ -828,8 +840,13 @@ async function sair(){
   mostrarLogin();
 }
 function sessaoTerminou(){limparSessao();mostrarLogin();erroLogin('l','Sua sessão terminou. Entre de novo.')}
+const urlConvite=c=>location.origin+location.pathname+'#convite='+encodeURIComponent(c||'');
 function mostrarLogin(modo){
   $('#carregando').hidden=true;$('#app').hidden=true;$('#who').hidden=true;$('#dayhead').hidden=true;$('#login').hidden=false;$('#progresso').style.width='0';
+  const convite=ls.get(K_CONVITE);
+  if(modo==='inicio')modo=convite?'cadastro':'entrar'; // chegou pelo link de convite: vai direto ao primeiro acesso
+  if(convite&&!$('#cCodigo').value)$('#cCodigo').value=convite;
+  $('#campoCodigo').hidden=!!convite;$('#conviteNota').hidden=!convite;
   const cad=modo==='cadastro';$('#loginCadastro').hidden=!cad;$('#loginEntrar').hidden=cad;
   const nome=ls.get(K_NOME);if(nome&&document.activeElement!==$('#lNome'))$('#lNome').value=nome;
   renderBanner();
@@ -1128,6 +1145,7 @@ function renderAdmin(){
   const adm=!!(S.pessoa&&S.pessoa.admin);$('#admin').hidden=!adm;if(!adm)return;
   const f=(id,v)=>{const e=$(id);if(document.activeElement!==e)e.value=v==null?'':v};
   f('#cfgInicio',S.cfg.inicio);f('#cfgDias',S.cfg.dias);f('#cfgCodigo',S.cfg.codigo);
+  $('#linkConvite').textContent=urlConvite(S.cfg.codigo);
   const ul=$('#pessoas');ul.textContent='';
   for(const p of S.equipe){
     const li=el('li','pessoa');
@@ -1233,6 +1251,11 @@ function bind(){
     if(!r.ok){if(r.erro!=='sessao')toast(r.erro==='pin_errado'?'O PIN atual não confere.':msg(r));return}
     $('#pAtual').value='';$('#pNovo').value='';toast('PIN trocado.');
   });
+  $('#copiarConvite').addEventListener('click',async()=>{
+    const url=urlConvite(S.cfg.codigo);
+    try{await navigator.clipboard.writeText(url);toast('Link de convite copiado.')}
+    catch(e){const r=document.createRange();r.selectNodeContents($('#linkConvite'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Link selecionado. Copie com Cmd+C.')}
+  });
   $('#cfgForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const inicio=$('#cfgInicio').value,dias=Math.round(Number($('#cfgDias').value)),codigo=$('#cfgCodigo').value.trim();
@@ -1254,6 +1277,7 @@ function bind(){
 
 /* ---------- início ---------- */
 initGroups();bind();
+{const m=(location.hash||'').match(/^#convite=([^&]+)/);if(m){try{ls.set(K_CONVITE,decodeURIComponent(m[1]).trim())}catch(e){}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}}
 const aba=ls.get(K_ABA);if(PAINEIS.includes(aba))S.tab=aba;
 const h=(location.hash||'').slice(1);if(PAINEIS.includes(h))S.tab=h;
 S.sel=clampSel(todayKey());
@@ -1264,7 +1288,7 @@ if(tok&&CONECTADO){
   if(c&&c.pessoa){S.pessoa=c.pessoa;S.cfg={...DEFAULT_CFG,...(c.cfg||{})};S.dias=cleanDias(c.dias);S.espelho=cleanEsp(c.espelho);S.diario=cleanDiario(c.diario);S.placar=c.placar!==false;S.sel=clampSel(S.sel);mostrarApp()}
   carregar();
 }else{
-  mostrarLogin();
+  mostrarLogin('inicio');
   if(!CONECTADO){for(const i of document.querySelectorAll('#login input,#login button'))i.disabled=true}
 }
 })();

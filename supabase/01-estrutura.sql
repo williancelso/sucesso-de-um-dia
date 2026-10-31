@@ -135,6 +135,13 @@ language sql immutable set search_path = '' as $$
           and not (x = 'descanso' and 'treino' = any(coalesce(p, '{}'::text[])))) t
 $$;
 
+-- quantos hábitos contam no dia: no sábado e no domingo o trabalho fica de fora
+create or replace function public._conta(p_dia date, p_itens text[]) returns int
+language sql immutable set search_path = '' as $$
+  select cardinality(case when extract(isodow from p_dia) >= 6
+                          then array_remove(p_itens, 'trabalho') else p_itens end)
+$$;
+
 create or replace function public._sessao(p_token text) returns uuid
 language sql stable security definer set search_path = '' as $$
   select s.pessoa_id from public.sessoes s
@@ -296,6 +303,8 @@ begin
   if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
   if jsonb_typeof(p_itens) <> 'array' then return json_build_object('ok', false, 'erro', 'itens_invalidos'); end if;
   it := public._itens(array(select jsonb_array_elements_text(p_itens)));
+  -- trabalho conta só de segunda a sexta
+  if extract(isodow from p_dia) >= 6 then it := array_remove(it, 'trabalho'); end if;
   select * into c from public.config where id = 1;
   -- só dias do desafio, e no máximo "amanhã" em UTC (cobre quem está à frente do Brasil no fuso)
   if p_dia is null or p_dia < c.inicio or p_dia > c.inicio + c.dias - 1
@@ -405,7 +414,7 @@ begin
   return json_build_object('ok', true, 'pessoas', coalesce((
     select json_agg(json_build_object(
              'id', p.id, 'nome', p.nome, 'eu', p.id = v,
-             'd', (select coalesce(json_object_agg(d.dia::text, cardinality(d.itens)), '{}'::json)
+             'd', (select coalesce(json_object_agg(d.dia::text, public._conta(d.dia, d.itens)), '{}'::json)
                    from public.dias d where d.pessoa_id = p.id))
            order by p.nome)
     from public.pessoas p
@@ -475,7 +484,7 @@ end $$;
 -- ---------------------------------------------------------------------
 
 revoke execute on function
-  public._slug(text), public._itens(text[]), public._sessao(text), public._nova_sessao(uuid),
+  public._slug(text), public._itens(text[]), public._conta(date, text[]), public._sessao(text), public._nova_sessao(uuid),
   public._eh_admin(uuid), public._dados(uuid)
 from public, anon, authenticated;
 

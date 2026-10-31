@@ -2,9 +2,9 @@
 
 App do desafio de 74 dias da Autentica. Cada pessoa entra com **nome e PIN de 4 números** e tem:
 
-- **Hoje:** os 5 hábitos do dia (dieta, treino, estudo, trabalho com eficiência e oração) e a folha com os 74 dias.
-- **Espelho:** anotações das mentiras que a pessoa conta para si mesma. Ninguém do time vê.
-- **Time:** o placar (só quantos dos 5 itens cada um marcou por dia), a troca de PIN e, para administradores, os ajustes do desafio e a lista de pessoas.
+- **Hoje:** os hábitos do dia (oração, estudo, trabalho com eficiência, dieta e treino), o desenho do dia, que ganha um traço a cada hábito marcado, e a folha com os 74 dias. O trabalho vale só de segunda a sexta; no sábado e no domingo o dia se vence com 4 hábitos.
+- **Diário:** uma página por dia para confessar, refletir e analisar o dia, e as horas que a pessoa reconhece ter desperdiçado. Ninguém do time vê.
+- **Time:** o placar (só quantos hábitos cada um marcou por dia), a troca de PIN e, para administradores, os ajustes do desafio e a lista de pessoas.
 
 O app é uma página só (`index.html`) que conversa com um banco no Supabase.
 

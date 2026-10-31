@@ -139,10 +139,17 @@ h3{font-weight:600}
 .num{font-family:var(--f-display);font-size:21px;font-weight:300;line-height:1;color:var(--dourado);font-variant-numeric:tabular-nums;min-width:28px}
 .txt .d{display:block;color:var(--cinza);font-size:13.5px;line-height:1.45;margin-top:3px;padding-left:38px}
 
-.result{margin-top:30px;display:flex;gap:18px;align-items:center;min-height:56px}
-.pips{display:grid;grid-template-columns:repeat(5,10px);gap:4px;flex:none}
-.pip{display:block;width:10px;height:10px;border:1.25px solid var(--azul)}
-.pip.on{background:var(--azul)}
+.result{margin-top:30px;display:grid;gap:18px;align-items:center}
+@media (min-width:560px){.result{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:30px}}
+/* O desenho do dia: cada hábito marcado desenha um traço */
+.desenho-dia{position:relative;margin:0;width:100%;max-width:420px;aspect-ratio:900/695}
+.desenho-dia img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.traco .fantasma{opacity:.13}
+.traco .tinta{opacity:0;clip-path:var(--fim)}
+.traco.on .tinta{opacity:1;animation:risca 1.1s cubic-bezier(.45,.05,.3,1) both}
+@keyframes risca{from{clip-path:var(--ini)}to{clip-path:var(--fim)}}
+.assinatura{position:absolute;left:88.6%;top:85%;width:2.3%;aspect-ratio:1;background:var(--bordo);transform:scale(0);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.desenho-dia.completo .assinatura{transform:scale(1);transition-delay:.9s}
 .rtxt{min-width:0}
 .result .big{font-family:var(--f-display);font-size:27px;font-weight:300;line-height:1.15}
 .result .small{color:var(--cinza);font-size:13.5px;margin-top:3px}
@@ -156,7 +163,6 @@ h3{font-weight:600}
 .stat:first-child{padding-left:0;border-left:0}
 .stat .n{font-family:var(--f-display);font-size:40px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .stat .l{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cinza);line-height:1.5}
-.totals .stat .n{font-size:30px;white-space:nowrap;overflow-wrap:normal}
 
 h2{font-family:var(--f-display);font-size:32px;font-weight:500;line-height:1.08;letter-spacing:-.005em}
 h2::after{content:"";display:block;width:40px;height:2px;background:var(--dourado);margin-top:12px}
@@ -189,11 +195,8 @@ h2::after{content:"";display:block;width:40px;height:2px;background:var(--dourad
 .desenho{margin-top:60px}
 .etq-ouro{color:var(--dourado)}
 .desenho h2{margin-top:14px}
-.med-abre{margin-top:26px;display:grid;gap:22px;align-items:center}
+.med-abre{margin-top:22px;max-width:36rem}
 .med-abre p{font-size:16px;line-height:1.75}
-.folha-desenho{margin:0}
-.folha-desenho img{display:block;width:100%;height:auto}
-@media (min-width:560px){.med-abre{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:30px}}
 .med-btn{margin-top:20px;font-size:14px}
 .med-btn::after{content:" ↓";text-decoration:none;display:inline-block;margin-left:6px;color:var(--dourado)}
 #medFechar{align-self:flex-start;margin-top:8px}
@@ -227,13 +230,12 @@ textarea,input[type="number"],input[type="date"],input[type="text"],input[type="
 textarea{resize:vertical;min-height:66px;line-height:1.45}
 textarea:focus,input:focus{border-color:var(--azul);outline:none}
 input:disabled,textarea:disabled{opacity:.55}
-.minrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.mininput{display:flex;align-items:center;gap:8px;flex:0 0 auto}
-.mininput input{width:96px;font-variant-numeric:tabular-nums}
-.mininput span{color:var(--cinza);font-size:13.5px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chips button{background:var(--marfim);border:1px solid var(--linha);padding:9px 13px;font-weight:500;font-size:13.5px;cursor:pointer;font-variant-numeric:tabular-nums}
-.chips button[aria-pressed="true"]{background:var(--azul);border-color:var(--azul);color:var(--marfim)}
+.horas{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px}
+.horas-rot{font-size:13px;color:var(--cinza)}
+.passo{display:inline-flex;align-items:stretch;border:1px solid var(--linha)}
+.passo button{width:36px;height:36px;padding:0;background:none;border:0;font-size:18px;line-height:1;color:var(--azul);cursor:pointer}
+.passo button:disabled{opacity:.3;cursor:default}
+.passo output{min-width:66px;padding:0 6px;border-inline:1px solid var(--linha);font-family:var(--f-display);font-size:16px;line-height:36px;text-align:center;font-variant-numeric:tabular-nums}
 .primary{align-self:flex-start;background:var(--azul);color:var(--marfim);border:0;padding:14px 22px;font-weight:600;font-size:13.5px;letter-spacing:.06em;cursor:pointer}
 .primary:hover:not(:disabled){opacity:.9}
 .primary:disabled{opacity:.5;cursor:default}
@@ -271,8 +273,6 @@ textarea.pag-texto:focus{border:0}
 .pag-status{font-size:12px;color:var(--cinza);min-height:1.2em}
 .pag-status.erro{color:var(--bordo);font-weight:600}
 .pag-volta{margin-top:12px}
-.tot-etq{margin-top:36px;color:var(--cinza)}
-.tot-etq + .totals{margin-top:12px}
 .paginas{margin-top:40px}
 .paginas h3{font-size:18px}
 .indice{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--linha)}
@@ -340,7 +340,6 @@ textarea.pag-texto:focus{border:0}
   .mini{grid-column:3/-1}
   .stat{padding:0 10px}
   .stat .n{font-size:32px}
-  .totals .stat .n{font-size:24px}
   .result.won .big{font-size:32px}
   .cfg{grid-template-columns:1fr}
 }
@@ -416,7 +415,7 @@ textarea.pag-texto:focus{border:0}
       <div id="groups"></div>
 
       <div class="result" id="result" aria-live="polite">
-        <div class="pips" id="pips" aria-hidden="true"></div>
+        <figure class="desenho-dia" id="desenhoDia" aria-hidden="true"><img src="img/folha/folha.png" alt="" width="900" height="695"><i class="assinatura"></i></figure>
         <div class="rtxt"><p class="big" id="rBig">Comece por um.</p><p class="small" id="rSmall"></p></div>
       </div>
 
@@ -446,7 +445,6 @@ textarea.pag-texto:focus{border:0}
         <p class="etq etq-ouro">Antes de dormir</p>
         <h2 id="desenhoH">O desenho para Deus</h2>
         <div class="med-abre">
-          <figure class="folha-desenho"><img src="img/desenho.jpg" alt="Desenho de criança numa folha: sol, montanha, carro e árvore." width="900" height="695" loading="lazy"></figure>
           <p>Pense numa menina de sete anos. Na escola, ela faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga o carinho e o esforço que estão ali. E sabe reconhecer, também, o dia em que a filha não caprichou.</p>
         </div>
         <button type="button" class="link med-btn" id="medAbrir" aria-expanded="false" aria-controls="meditacao">Continuar a leitura</button>
@@ -472,10 +470,10 @@ textarea.pag-texto:focus{border:0}
       <details class="sobre" id="sobre">
         <summary>Como funciona o desafio</summary>
         <div class="sobre-body">
-          <p><strong>Cinco hábitos difíceis, porém bons, todos os dias:</strong> oração, 30 minutos de estudo, trabalho com eficiência, dieta e treino.</p>
+          <p><strong>Cinco hábitos difíceis, porém bons, todos os dias:</strong> oração, 30 minutos de estudo, trabalho com eficiência (de segunda a sexta), dieta e treino.</p>
           <p>A vontade é uma lanterna que, de fábrica, aponta para o que é fácil: gula, preguiça, ira. Cada hábito é virar essa lanterna, com força, para as virtudes. É daí que vem a força de vontade.</p>
           <p>Você treina 5 ou 6 vezes por semana. Nos dias de folga, marque o descanso: ele vale como treino cumprido.</p>
-          <p>Fez os cinco? O dia está vencido. Você venceu a si mesmo. À noite, na oração, entregue o seu desenho a Deus.</p>
+          <p>Cada hábito marcado desenha um traço da folha do dia: a oração é o sol, o estudo é a montanha, o trabalho é o carro, a dieta é a árvore e o treino é o caminho. Fez todos? O dia está vencido e o desenho, completo. À noite, na oração, entregue o seu desenho a Deus.</p>
           <p>No Diário, uma página por dia para confessar, refletir e analisar o seu dia com extrema honestidade.</p>
         </div>
       </details>
@@ -503,29 +501,18 @@ textarea.pag-texto:focus{border:0}
         <label class="oculto" for="diarioTxt">Página do diário</label>
         <textarea id="diarioTxt" class="pag-texto" maxlength="20000" readonly placeholder="Comece por qualquer coisa. Ninguém mais vai ler."></textarea>
         <footer class="pag-rodape">
-          <div class="field">
-            <label for="espMin">Tempo perdido com mentiras</label>
-            <div class="minrow">
-              <div class="mininput"><input id="espMin" type="number" inputmode="numeric" min="0" max="1440" step="1" placeholder="0"><span>min</span></div>
-              <div class="chips" id="chips">
-                <button type="button" data-min="10" aria-pressed="false">10</button>
-                <button type="button" data-min="20" aria-pressed="false">20</button>
-                <button type="button" data-min="30" aria-pressed="false">30</button>
-                <button type="button" data-min="60" aria-pressed="false">1 h</button>
-              </div>
+          <div class="horas">
+            <span class="horas-rot" id="horasRot">Horas que reconheço ter desperdiçado hoje</span>
+            <div class="passo" role="group" aria-labelledby="horasRot">
+              <button type="button" id="horasMenos" aria-label="Meia hora a menos">−</button>
+              <output id="horasVal" aria-live="polite">0 h</output>
+              <button type="button" id="horasMais" aria-label="Meia hora a mais">+</button>
             </div>
           </div>
           <p class="pag-status" id="pagStatus" aria-live="polite"></p>
         </footer>
       </article>
       <p class="pag-volta"><button type="button" class="link" id="diarioHoje" hidden>Voltar para a página de hoje</button></p>
-
-      <p class="etq tot-etq">Tempo perdido com mentiras</p>
-      <div class="stats totals">
-        <div class="stat"><span class="n" id="espHoje">0min</span><span class="l">Hoje</span></div>
-        <div class="stat"><span class="n" id="espSemana">0min</span><span class="l">Esta semana</span></div>
-        <div class="stat"><span class="n" id="espTotal">0min</span><span class="l">No desafio</span></div>
-      </div>
 
       <section class="paginas" aria-labelledby="paginasH">
         <h3 id="paginasH">Páginas anteriores</h3>
@@ -549,7 +536,7 @@ textarea.pag-texto:focus{border:0}
 
       <div class="optin">
         <label class="switch" for="optPlacar"><input type="checkbox" id="optPlacar" role="switch" checked><span>Aparecer no placar</span></label>
-        <p class="hint">O time vê só quantos dos 5 você marcou em cada dia, nunca quais. O Diário nunca aparece aqui.</p>
+        <p class="hint">O time vê só quantos hábitos você marcou em cada dia, nunca quais. O Diário nunca aparece aqui.</p>
       </div>
 
       <ol class="board" id="board"></ol>
@@ -664,6 +651,8 @@ function abs(k){const p=k.split('-').map(Number);return Math.round(Date.UTC(p[0]
 function fromAbs(n){const t=new Date(n*DAY);return t.getUTCFullYear()+'-'+pad(t.getUTCMonth()+1)+'-'+pad(t.getUTCDate())}
 const validKey=k=>typeof k==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(k)&&isFinite(abs(k));
 const wd=k=>(new Date(abs(k)*DAY).getUTCDay()+6)%7; // segunda = 0
+const fds=k=>wd(k)>=5; // sábado e domingo: o trabalho sai da conta
+const metaDe=k=>fds(k)?4:5;
 const F_LONG=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'});
 const F_SHORT=new Intl.DateTimeFormat('pt-BR',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
 const F_DM=new Intl.DateTimeFormat('pt-BR',{day:'numeric',month:'long',timeZone:'UTC'});
@@ -671,7 +660,8 @@ const F_MON=new Intl.DateTimeFormat('pt-BR',{month:'short',timeZone:'UTC'});
 const fmt=(f,k)=>f.format(new Date(abs(k)*DAY));
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 function fmtMin(m){m=Math.round(m);if(m<60)return m+' min';const h=Math.floor(m/60),r=m%60;return r?h+' h '+r+' min':h+' h'}
-function fmtMinShort(m){m=Math.round(m);if(m<60)return m+'min';const h=Math.floor(m/60),r=m%60;return r?h+'h'+pad(r):h+'h'}
+function fmtHoras(m){m=Math.round(m)||0;if(m%30)return fmtMin(m); // anotações antigas, em minutos
+  const h=m/60;return (h%1?h.toLocaleString('pt-BR',{minimumFractionDigits:1}):String(h))+' h'}
 const iniciais=n=>(n||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase()||'·';
 
 /* ---------- estado ---------- */
@@ -696,12 +686,13 @@ function bounds(){const s=abs(S.cfg.inicio),e=s+S.cfg.dias-1,t=abs(todayKey());r
 function phase(){const b=bounds();return b.t<b.s?'antes':b.t>b.e?'depois':'durante'}
 function clampSel(k){const b=bounds();const hi=Math.max(b.s,b.last);let n=k&&validKey(k)?abs(k):b.t;return fromAbs(Math.max(b.s,Math.min(n,hi)))}
 function editable(k){const b=bounds(),n=abs(k);return n>=b.s&&n<=b.last}
-const countOf=k=>(S.dias[k]||[]).length;
+const countOf=k=>(S.dias[k]||[]).filter(i=>i!=='trabalho'||!fds(k)).length;
 function countsMap(){const m={};for(const k of Object.keys(S.dias)){const c=countOf(k);if(c>0)m[k]=c}return m}
 function streaks(f){const b=bounds();let won=0,best=0,run=0;
-  for(let n=b.s;n<=b.last;n++){if(f(fromAbs(n))===5){won++;run++;if(run>best)best=run}else run=0}
-  let cur=0,n=b.last;if(n===b.t&&f(fromAbs(n))<5)n--; // hoje ainda está em aberto
-  for(;n>=b.s&&f(fromAbs(n))===5;n--)cur++;
+  const cheio=n=>{const k=fromAbs(n);return f(k)>=metaDe(k)};
+  for(let n=b.s;n<=b.last;n++){if(cheio(n)){won++;run++;if(run>best)best=run}else run=0}
+  let cur=0,n=b.last;if(n===b.t&&!cheio(n))n--; // hoje ainda está em aberto
+  for(;n>=b.s&&cheio(n);n--)cur++;
   return{won,best,cur}}
 
 /* ---------- conversa com o banco ---------- */
@@ -890,6 +881,27 @@ function toggleDescanso(){
 function selectDay(k){S.sel=clampSel(k);renderHead();renderHoje()}
 
 /* ---------- render ---------- */
+/* Cada hábito é um traço do desenho. ini/fim: recorte do começo e do fim do traço (área de cada elemento) */
+const TRACOS=[
+  {k:'oracao',img:'sol',ini:'circle(0% at 24.3% 28%)',fim:'circle(19% at 24.3% 28%)'},
+  {k:'estudo',img:'montanha',ini:'inset(57% 0 0 0)',fim:'inset(24% 0 0 0)'},
+  {k:'treino',img:'caminho',ini:'inset(0 89% 0 0)',fim:'inset(0 11% 0 0)'},
+  {k:'dieta',img:'arvore',ini:'inset(84% 0 0 0)',fim:'inset(44% 0 0 0)'},
+  {k:'trabalho',img:'carro',ini:'inset(0 83% 0 0)',fim:'inset(0 47% 0 0)'}
+];
+function initDesenho(){
+  const fig=$('#desenhoDia'),sig=$('.assinatura',fig);
+  for(const t of TRACOS){
+    const s=el('span','traco');s.dataset.k=t.k;s.style.setProperty('--ini',t.ini);s.style.setProperty('--fim',t.fim);
+    for(const c of ['fantasma','tinta']){const i=el('img',c);i.src='img/folha/'+t.img+'.png';i.alt='';i.width=900;i.height=695;s.append(i)}
+    fig.insertBefore(s,sig);
+  }
+}
+function renderDesenho(k,day){
+  const fig=$('#desenhoDia'),feito=p=>day.has(p)||(p==='treino'&&day.has('descanso'));
+  for(const s of fig.querySelectorAll('.traco')){const p=s.dataset.k;s.hidden=p==='trabalho'&&fds(k);s.classList.toggle('on',feito(p))}
+  fig.classList.toggle('completo',countOf(k)>=metaDe(k));
+}
 function initGroups(){
   const host=$('#groups');
   for(const g of GRUPOS){
@@ -934,16 +946,18 @@ function renderHead(){
 }
 function renderHoje(celebrate){
   const k=S.sel,day=new Set(S.dias[k]||[]),c=countOf(k),ed=editable(k);
+  let num=0;
+  for(const p of PILARES){const b=$('#pilar-'+p.k),fora=p.k==='trabalho'&&fds(k);b.hidden=fora;if(!fora)$('.num',b).textContent=pad(++num)}
   for(const p of PILARES){const b=$('#pilar-'+p.k),folga=p.k==='treino'&&day.has('descanso');b.setAttribute('aria-checked',(day.has(p.k)||folga)?'true':'false');b.disabled=!ed;b.classList.toggle('descanso',folga)}
   renderRegras(k,day,ed);
-  const pips=$('#pips');pips.textContent='';for(let i=0;i<5;i++)pips.append(el('i',i<c?'pip on':'pip'));
-  const r=$('#result');r.classList.toggle('won',c===5);
-  let big,small;const falta=5-c;
-  if(c===5){big='Venci a mim mesmo.';small='Sou um campeão de mim. Agora, entregue o seu desenho a Deus.'}
+  renderDesenho(k,day);
+  const meta=metaDe(k),r=$('#result');r.classList.toggle('won',c>=meta);
+  let big,small;const falta=meta-c;
+  if(c>=meta){big='Venci a mim mesmo.';small='Sou um campeão de mim. Agora, entregue o seu desenho a Deus.'}
   else if(phase()==='antes'){big='Ainda não começou.';small='O desafio começa em '+fmt(F_DM,S.cfg.inicio)+'.'}
   else if(k===todayKey()){big=c===0?'Comece por um.':'Faltam '+falta+'.';if(falta===1)big='Falta 1.';
     small=c===0?'Marque cada hábito assim que cumprir.':'Ainda dá tempo de vencer o dia.'}
-  else{big=c+' de 5.';small=c===0?'Nada marcado neste dia.':(falta===1?'Faltou 1 item neste dia.':'Faltaram '+falta+' itens neste dia.')}
+  else{big=c+' de '+meta+'.';small=c===0?'Nada marcado neste dia.':(falta===1?'Faltou 1 item neste dia.':'Faltaram '+falta+' itens neste dia.')}
   const bigEl=$('#rBig');bigEl.textContent=big;$('#rSmall').textContent=small;
   if(celebrate&&!reduceMotion){bigEl.classList.remove('rise');void bigEl.offsetWidth;bigEl.classList.add('rise')}
   const st=streaks(countOf);
@@ -1013,14 +1027,14 @@ function renderFolha(){
   for(let i=0;i<S.cfg.dias;i++){
     const n=b.s+i,k=fromAbs(n),c=countOf(k),fut=n>b.t||n>b.e;
     const cell=el('button','cell');cell.type='button';
-    if(fut)cell.classList.add('fut');else if(c===5)cell.classList.add('won');else if(c>0)cell.style.setProperty('--p',String(c/5));
+    if(fut)cell.classList.add('fut');else if(c>=metaDe(k))cell.classList.add('won');else if(c>0)cell.style.setProperty('--p',String(c/metaDe(k)));
     if(k===tk){cell.classList.add('today');cell.setAttribute('aria-current','date')}
     if(k===S.sel)cell.classList.add('sel');
     cell.setAttribute('aria-pressed',k===S.sel?'true':'false');
     const dd=Number(k.slice(8));
     cell.append(el('span','dn',String(dd)));
     if(dd===1||i===0)cell.append(el('span','mo',F_MON.format(new Date(n*DAY)).replace('.','')));
-    cell.setAttribute('aria-label','Dia '+(i+1)+', '+fmt(F_DM,k)+(fut?', ainda não chegou':': '+c+' de 5'));
+    cell.setAttribute('aria-label','Dia '+(i+1)+', '+fmt(F_DM,k)+(fut?', ainda não chegou':': '+c+' de '+metaDe(k)));
     cell.disabled=fut;
     cell.addEventListener('click',()=>{selectDay(k);window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'})});
     g.append(cell);
@@ -1036,7 +1050,6 @@ function limparRascunho(dia){const r=rascunhos();delete r[chaveRascunho(dia)];ls
 function diaDiario(){const b=bounds();return fromAbs(Math.max(b.s,Math.min(b.t,b.e)))}
 function statusPagina(t,erro){const e=$('#pagStatus');e.textContent=t||'';e.classList.toggle('erro',!!erro)}
 function crescer(ta){ta.style.height='auto';ta.style.height=Math.max(352,ta.scrollHeight)+'px'}
-function syncChips(){const v=String(Math.round(Number($('#espMin').value)));for(const b of document.querySelectorAll('#chips button'))b.setAttribute('aria-pressed',String(b.dataset.min===v))}
 async function abrirPagina(dia){
   if(PAG.sujo)await gravarPagina();
   const v=++PAG.versao;
@@ -1048,7 +1061,7 @@ async function abrirPagina(dia){
   const rasc=rascunhos()[chaveRascunho(dia)];
   if(rasc&&(rasc.texto!==PAG.texto||rasc.min!==PAG.min)){PAG.texto=rasc.texto||'';PAG.min=rasc.min==null?null:rasc.min;PAG.sujo=true;agendarPagina(300)}
   PAG.carregado=true;renderPagina(true);statusPagina(r.ok||PAG.sujo?'':msg(r),!r.ok&&!PAG.sujo);
-  renderIndice();renderTotais();
+  renderIndice();
 }
 function agendarPagina(ms){clearTimeout(PAG.timer);PAG.timer=setTimeout(gravarPagina,ms==null?1200:ms)}
 async function gravarPagina(){
@@ -1071,19 +1084,20 @@ async function gravarPagina(){
   if(!(PAG.sujo&&PAG.dia===dia))limparRascunho(dia);
   salvarCache();
   if(dia===PAG.dia){const t=new Date();statusPagina('Guardado às '+pad(t.getHours())+':'+pad(t.getMinutes()))}
-  renderIndice();renderTotais();
+  renderIndice();
   if(PAG.denovo){PAG.denovo=false;gravarPagina()}
 }
 function renderPagina(valores){
   if(!PAG.dia)return;
-  const b=bounds(),ta=$('#diarioTxt'),mi=$('#espMin');
+  const b=bounds(),ta=$('#diarioTxt'),m=PAG.min||0;
   $('#pagData').textContent=cap(fmt(F_LONG,PAG.dia));
   $('#pagDia').textContent='Dia '+(abs(PAG.dia)-b.s+1);
   $('#diarioHoje').hidden=PAG.dia===diaDiario();
-  ta.readOnly=!PAG.carregado;mi.disabled=!PAG.carregado;
+  ta.readOnly=!PAG.carregado;
+  $('#horasRot').textContent='Horas que reconheço ter desperdiçado '+(PAG.dia===diaDiario()?'hoje':'neste dia');
+  $('#horasVal').textContent=fmtHoras(m);$('#horasMenos').disabled=!PAG.carregado||!m;$('#horasMais').disabled=!PAG.carregado||m>=1440;
   if(valores||document.activeElement!==ta)ta.value=PAG.texto;
-  if(valores||document.activeElement!==mi)mi.value=PAG.min?String(PAG.min):'';
-  crescer(ta);syncChips();
+  crescer(ta);
 }
 function renderIndice(){
   const ol=$('#indice');ol.textContent='';
@@ -1091,21 +1105,15 @@ function renderIndice(){
   $('#paginasVazio').hidden=itens.length>0;
   for(const d of itens){
     const li=el('li'),b=el('button','pag-item');b.type='button';
-    b.append(el('span','pi-data',fmt(F_SHORT,d.dia).replace(/\./g,'')),el('span','pi-resumo',d.resumo||'Só o tempo perdido anotado.'));
-    if(d.min)b.append(el('span','pi-min',fmtMin(d.min)));
+    b.append(el('span','pi-data',fmt(F_SHORT,d.dia).replace(/\./g,'')),el('span','pi-resumo',d.resumo||'Só as horas desperdiçadas anotadas.'));
+    if(d.min)b.append(el('span','pi-min',fmtHoras(d.min)));
     b.addEventListener('click',async()=>{await abrirPagina(d.dia);$('.pagina').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})});
     li.append(b);ol.append(li);
   }
 }
-function renderTotais(){
-  const tk=todayKey(),t=abs(tk),ws=t-wd(tk),b=bounds();let hoje=0,sem=0,tot=0;
-  const mins=new Map(S.diario.map(d=>[d.dia,d.min||0]));if(PAG.dia&&PAG.carregado)mins.set(PAG.dia,PAG.min||0);
-  for(const [dia,m] of mins){const n=abs(dia);if(dia===tk)hoje+=m;if(n>=ws&&n<=ws+6)sem+=m;if(n>=b.s&&n<=b.e)tot+=m}
-  $('#espHoje').textContent=fmtMinShort(hoje);$('#espSemana').textContent=fmtMinShort(sem);$('#espTotal').textContent=fmtMinShort(tot);
-}
 function renderEspelho(){
   if(S.pessoa&&S.token&&!PAG.dia){abrirPagina(diaDiario());return}
-  renderPagina();renderIndice();renderTotais();
+  renderPagina();renderIndice();
 }
 /* Confirmação em dois toques, sem diálogo */
 function armar(btn,rotulo,acao){
@@ -1117,7 +1125,7 @@ function mini(f){
   const m=el('div','mini');m.setAttribute('aria-hidden','true');
   const b=bounds();
   for(let i=0,off=wd(S.cfg.inicio);i<off;i++)m.append(el('i','blank'));
-  for(let i=0;i<S.cfg.dias;i++){const n=b.s+i;const c=n>b.t?-1:f(fromAbs(n));m.append(el('i',c<0?'fut':c===5?'won':c>0?'part':''))}
+  for(let i=0;i<S.cfg.dias;i++){const n=b.s+i,k=fromAbs(n);const c=n>b.t?-1:f(k);m.append(el('i',c<0?'fut':c>=metaDe(k)?'won':c>0?'part':''))}
   return m;
 }
 function renderTeam(){
@@ -1140,7 +1148,7 @@ function renderTeam(){
     const info=el('div','pn');
     const nm=el('span','nm',t.nome||'Alguém do time');
     if(t.eu)nm.append(el('span','you','você'));
-    info.append(nm,el('span','meta',t.st.won+(t.st.won===1?' dia vencido':' dias vencidos')+' · sequência '+t.st.cur+' · hoje '+t.hoje+'/5'));
+    info.append(nm,el('span','meta',t.st.won+(t.st.won===1?' dia vencido':' dias vencidos')+' · sequência '+t.st.cur+' · hoje '+t.hoje+'/'+metaDe(tk)));
     li.append(info,mini(t.f));board.append(li);
   });
 }
@@ -1232,12 +1240,12 @@ function bind(){
   $('#nextDay').addEventListener('click',()=>selectDay(fromAbs(abs(S.sel)+1)));
   $('#goToday').addEventListener('click',()=>selectDay(todayKey()));
 
-  const ta=$('#diarioTxt'),minIn=$('#espMin');
+  const ta=$('#diarioTxt');
   ta.addEventListener('input',()=>{if(!PAG.carregado)return;PAG.texto=ta.value;PAG.sujo=true;crescer(ta);guardarRascunho();statusPagina('');agendarPagina()});
   ta.addEventListener('blur',()=>{if(PAG.sujo)gravarPagina()});
-  const mudarMin=()=>{if(!PAG.carregado)return;const v=Math.round(Number(minIn.value));PAG.min=v>0?Math.min(1440,v):null;PAG.sujo=true;syncChips();renderTotais();guardarRascunho();agendarPagina(600)};
-  minIn.addEventListener('input',mudarMin);
-  for(const b of document.querySelectorAll('#chips button'))b.addEventListener('click',()=>{minIn.value=b.dataset.min;mudarMin()});
+  const mudarHoras=d=>{if(!PAG.carregado)return;const m=Math.max(0,Math.min(1440,(Math.round((PAG.min||0)/30)+d)*30));PAG.min=m||null;PAG.sujo=true;renderPagina();guardarRascunho();agendarPagina(600)};
+  $('#horasMenos').addEventListener('click',()=>mudarHoras(-1));
+  $('#horasMais').addEventListener('click',()=>mudarHoras(1));
   for(const g of document.querySelectorAll('.guia'))g.addEventListener('click',()=>{
     if(!PAG.carregado)return;
     const v=ta.value.replace(/\s+$/,'');ta.value=(v?v+'\n\n':'')+g.dataset.q+'\n';
@@ -1285,7 +1293,7 @@ function bind(){
 }
 
 /* ---------- início ---------- */
-initGroups();bind();
+initGroups();initDesenho();bind();
 {const m=(location.hash||'').match(/^#convite=([^&]+)/);if(m){try{ls.set(K_CONVITE,decodeURIComponent(m[1]).trim())}catch(e){}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}}
 const aba=ls.get(K_ABA);if(PAINEIS.includes(aba))S.tab=aba;
 const h=(location.hash||'').slice(1);if(PAINEIS.includes(h))S.tab=h;

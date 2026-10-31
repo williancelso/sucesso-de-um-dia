@@ -64,6 +64,14 @@ r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-26', p_itens: ['de
 ok(r.ok, 'semana nova libera os descansos de novo', r);
 r = await call('placar', { p_token: tokW });
 ok(r.pessoas[0].d['2026-10-19'] === 5, 'no placar o dia com descanso conta 5 de 5', r.pessoas[0].d['2026-10-19']);
+ok(r.pessoas[0].d['2026-10-10'] === 4, 'no placar o trabalho do sábado não conta (importado com os 5)', r.pessoas[0].d['2026-10-10']);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-24', p_itens: ['trabalho', 'dieta', 'oracao'] });
+ok(r.ok, 'sábado com trabalho marcado é aceito', r);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-25', p_itens: ['trabalho'] });
+r = await call('meus_dados', { p_token: tokW });
+ok(JSON.stringify(r.dias['2026-10-24']) === '["dieta","oracao"]', 'no sábado o trabalho não é gravado', r.dias['2026-10-24']);
+ok(r.dias['2026-10-25'] === undefined, 'domingo só com trabalho fica vazio', r.dias['2026-10-25']);
+ok(JSON.stringify(r.dias['2026-10-23']) !== undefined && r.dias['2026-10-23'].includes('trabalho'), 'na sexta o trabalho continua', r.dias['2026-10-23']);
 
 r = await call('entrar', { p_nome: 'WILLIAN CELSO', p_pin: '4321' });
 ok(r.ok && r.token, 'entrar com nome em maiúsculas', r);

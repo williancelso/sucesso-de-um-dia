@@ -112,6 +112,11 @@ h3{font-weight:600}
 .opcao input:checked+span small{color:rgba(242,238,230,.75)}
 .opcao input:focus-visible+span{outline:2px solid var(--dourado);outline-offset:2px}
 
+.ajuste-conta{margin-top:26px;padding:22px 20px 24px;background:var(--branco);border:1px solid var(--linha)}
+.acoes-form{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center}
+.sair-linha{margin-top:22px}
+.who .link[aria-current="page"]{text-decoration-color:var(--marfim)}
+
 /* Hoje */
 .group{margin-top:32px}
 .group-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--linha)}
@@ -247,6 +252,34 @@ input:disabled,textarea:disabled{opacity:.55}
 .reflexao p{font-size:15.5px;line-height:1.75}
 .reflexao .ilustra{margin:0 0 24px}
 .reflexao .quote{margin-top:26px}
+/* Diário autobiográfico: página de caderno, linhas finas e margem dourada */
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.pagina{position:relative;margin-top:24px;background:var(--branco);border:1px solid var(--linha)}
+.pagina::before{content:"";position:absolute;top:0;bottom:0;left:30px;width:1px;background:var(--dourado);opacity:.6;pointer-events:none}
+.pag-topo{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:18px 20px 12px 46px;border-bottom:1px solid var(--linha)}
+.pag-data{font-family:var(--f-display);font-size:18px;font-weight:500;line-height:1.2}
+.pag-dia{font-family:var(--f-display);font-size:16px;color:var(--dourado);white-space:nowrap}
+.pag-guias{display:flex;flex-wrap:wrap;gap:6px;padding:14px 20px 4px 46px}
+.guia{background:transparent;border:1px solid var(--linha);padding:6px 12px;font-size:12.5px;font-weight:500;color:var(--cinza);cursor:pointer}
+.guia:hover{border-color:var(--azul);color:var(--azul)}
+textarea.pag-texto{display:block;width:100%;min-height:352px;margin:0;border:0;border-radius:0;resize:none;outline:none;overflow:hidden;padding:8px 20px 16px 46px;background-color:transparent;background-image:linear-gradient(to bottom,transparent 31px,rgba(110,115,122,.2) 31px);background-size:100% 32px;background-position:0 8px;background-attachment:local;font-family:var(--f-serif);font-size:21px;line-height:32px;color:var(--azul)}
+textarea.pag-texto::placeholder{color:rgba(110,115,122,.75);font-style:italic}
+textarea.pag-texto:focus{border:0}
+.pag-rodape{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 20px;padding:16px 20px 18px 46px;border-top:1px solid var(--linha)}
+.pag-status{font-size:12px;color:var(--cinza);min-height:1.2em}
+.pag-status.erro{color:var(--bordo);font-weight:600}
+.pag-volta{margin-top:12px}
+.tot-etq{margin-top:36px;color:var(--cinza)}
+.tot-etq + .totals{margin-top:12px}
+.paginas{margin-top:40px}
+.paginas h3{font-size:18px}
+.indice{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--linha)}
+.indice:empty{display:none}
+.pag-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--linha);padding:14px 0;cursor:pointer}
+.pi-data{grid-column:1;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cinza)}
+.pi-resumo{grid-column:1;font-family:var(--f-serif);font-size:18px;line-height:1.35;color:var(--azul);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pi-min{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:12.5px;color:var(--cinza);white-space:nowrap}
+.pag-item:hover .pi-resumo{text-decoration:underline;text-decoration-color:var(--dourado);text-underline-offset:4px}
 /* Frase-assinatura: serifada, em bordô */
 .quote{margin:52px 0 0;max-width:30rem;font-family:var(--f-serif);font-weight:500;font-size:29px;line-height:1.18;color:var(--bordo)}
 
@@ -317,7 +350,7 @@ input:disabled,textarea:disabled{opacity:.55}
   <span class="progresso" id="progresso" aria-hidden="true"></span>
   <div class="capa-in">
     <img class="arte" src="img/topo.png" alt="" aria-hidden="true" width="950" height="696">
-    <div class="top"><div class="who" id="who" hidden><span class="wn" id="whoNome"></span><button type="button" class="link" id="sair">Sair</button></div></div>
+    <div class="top"><div class="who" id="who" hidden><span class="wn" id="whoNome"></span><button type="button" class="link" id="abrirDesafio">Meu desafio</button><button type="button" class="link" id="sair">Sair</button></div></div>
     <h1 class="titulo"><span class="dest">Sucesso</span> de um Dia<span class="sq" aria-hidden="true"></span></h1>
     <section class="dayhead" id="dayhead" hidden>
       <div class="dayrow">
@@ -438,7 +471,7 @@ input:disabled,textarea:disabled{opacity:.55}
           <p>A vontade é uma lanterna que, de fábrica, aponta para o que é fácil: gula, preguiça, ira. Cada hábito é virar essa lanterna, com força, para as virtudes. É daí que vem a força de vontade.</p>
           <p>Você treina 5 ou 6 vezes por semana. Nos dias de folga, marque o descanso: ele vale como treino cumprido.</p>
           <p>Fez os cinco? O dia está vencido. Você venceu a si mesmo. À noite, na oração, entregue o seu desenho a Deus.</p>
-          <p>No Espelho, anote com extrema honestidade o tempo que você perde com as pequenas mentiras que conta para si.</p>
+          <p>No Espelho fica o seu diário autobiográfico: uma página por dia para confessar, refletir e analisar o seu dia com extrema honestidade.</p>
         </div>
       </details>
     </section>
@@ -449,37 +482,51 @@ input:disabled,textarea:disabled{opacity:.55}
         <p class="lead">A cada mentira que você conta para si, a sua personalidade se quebra um pouco mais, como um espelho que trinca.</p>
       </div>
       <figure class="ilustra"><img src="img/espelho.jpg" alt="Espelho antigo com trincas finas." width="1200" height="800" loading="lazy"></figure>
-      <p class="esp-guia">Quanto tempo você perdeu hoje com essas mentiras? Elas nunca começam grandes. Anote com extrema honestidade, mesmo as pequenas.</p>
-      <p class="priv">Ninguém do time vê o que você escreve aqui. O placar mostra só os seus dias.</p>
+      <p class="esp-guia">Este é o seu diário autobiográfico: um lugar para confessar, refletir e analisar o seu dia com extrema honestidade, mesmo nas pequenas coisas. Uma página por dia.</p>
+      <p class="priv">Só você lê este diário. Ninguém do time, nem o placar.</p>
 
-      <form id="espForm" class="esp-form" novalidate>
-        <div class="field">
-          <label for="espTxt">A mentira que contei para mim</label>
-          <textarea id="espTxt" rows="2" maxlength="280" placeholder="Ex.: rolei o feed dizendo que era pesquisa de roteiro"></textarea>
+      <article class="pagina" aria-labelledby="pagData">
+        <header class="pag-topo">
+          <p class="pag-data" id="pagData"></p>
+          <span class="pag-dia" id="pagDia"></span>
+        </header>
+        <div class="pag-guias" role="group" aria-label="Perguntas para começar">
+          <button type="button" class="guia" data-q="Confissão: em que eu menti para mim hoje?">Confissão</button>
+          <button type="button" class="guia" data-q="Reflexão: o que este dia me ensinou?">Reflexão</button>
+          <button type="button" class="guia" data-q="Análise: o que eu senti hoje, e por quê?">Análise</button>
         </div>
-        <div class="field">
-          <label for="espMin">Tempo perdido</label>
-          <div class="minrow">
-            <div class="mininput"><input id="espMin" type="number" inputmode="numeric" min="1" max="1440" step="1" placeholder="0"><span>min</span></div>
-            <div class="chips" id="chips">
-              <button type="button" data-min="10" aria-pressed="false">10</button>
-              <button type="button" data-min="20" aria-pressed="false">20</button>
-              <button type="button" data-min="30" aria-pressed="false">30</button>
-              <button type="button" data-min="60" aria-pressed="false">1 h</button>
+        <label class="oculto" for="diarioTxt">Página do diário</label>
+        <textarea id="diarioTxt" class="pag-texto" maxlength="20000" readonly placeholder="Comece por qualquer coisa. Ninguém mais vai ler."></textarea>
+        <footer class="pag-rodape">
+          <div class="field">
+            <label for="espMin">Tempo perdido com mentiras</label>
+            <div class="minrow">
+              <div class="mininput"><input id="espMin" type="number" inputmode="numeric" min="0" max="1440" step="1" placeholder="0"><span>min</span></div>
+              <div class="chips" id="chips">
+                <button type="button" data-min="10" aria-pressed="false">10</button>
+                <button type="button" data-min="20" aria-pressed="false">20</button>
+                <button type="button" data-min="30" aria-pressed="false">30</button>
+                <button type="button" data-min="60" aria-pressed="false">1 h</button>
+              </div>
             </div>
           </div>
-        </div>
-        <p class="err" id="espErr" role="alert" hidden></p>
-        <button type="submit" class="primary" id="espBtn">Anotar no espelho</button>
-      </form>
+          <p class="pag-status" id="pagStatus" aria-live="polite"></p>
+        </footer>
+      </article>
+      <p class="pag-volta"><button type="button" class="link" id="diarioHoje" hidden>Voltar para a página de hoje</button></p>
 
+      <p class="etq tot-etq">Tempo perdido com mentiras</p>
       <div class="stats totals">
         <div class="stat"><span class="n" id="espHoje">0min</span><span class="l">Hoje</span></div>
         <div class="stat"><span class="n" id="espSemana">0min</span><span class="l">Esta semana</span></div>
         <div class="stat"><span class="n" id="espTotal">0min</span><span class="l">No desafio</span></div>
       </div>
 
-      <div id="espList" class="esp-list"></div>
+      <section class="paginas" aria-labelledby="paginasH">
+        <h3 id="paginasH">Páginas anteriores</h3>
+        <ol class="indice" id="indice"></ol>
+        <p class="empty" id="paginasVazio">As páginas que você escrever aparecem aqui.</p>
+      </section>
 
       <section class="reflexao" aria-label="A chama que refaz o espelho">
         <figure class="ilustra"><img src="img/chama.jpg" alt="Espelho trincado sobre uma pequena chama; perto do fogo, o vidro volta a ficar inteiro." width="1200" height="800" loading="lazy"></figure>
@@ -503,22 +550,6 @@ input:disabled,textarea:disabled{opacity:.55}
       <ol class="board" id="board"></ol>
       <p class="empty" id="boardNote" hidden></p>
 
-      <section class="bloco" aria-labelledby="desafioH">
-        <h3 id="desafioH">Seu desafio</h3>
-        <p class="hint">Quantas vezes você treina por semana e qual é a sua dieta. Só você vê a sua dieta.</p>
-        <div id="desafioConta"></div>
-      </section>
-
-      <section class="bloco" aria-labelledby="contaH">
-        <h3 id="contaH">Sua conta</h3>
-        <p class="hint">Troque o seu PIN quando quiser. Esqueceu? Peça para o administrador zerar.</p>
-        <form id="pinForm" class="cfg" novalidate>
-          <div class="field"><label for="pAtual">PIN atual (4 dígitos)</label><input type="password" id="pAtual" class="pin" inputmode="numeric" autocomplete="current-password" maxlength="4"></div>
-          <div class="field"><label for="pNovo">PIN novo (4 dígitos)</label><input type="password" id="pNovo" class="pin" inputmode="numeric" autocomplete="new-password" maxlength="4"></div>
-          <button type="submit" class="primary">Trocar PIN</button>
-        </form>
-      </section>
-
       <section class="bloco" id="admin" aria-labelledby="ajH" hidden>
         <h3 id="ajH">Ajustes do desafio</h3>
         <p class="hint">Só administradores veem isto. Vale para o time inteiro.</p>
@@ -532,6 +563,33 @@ input:disabled,textarea:disabled{opacity:.55}
         <h3 style="margin-top:36px">Pessoas</h3>
         <p class="hint">Zere o PIN de quem esqueceu (a pessoa entra com o PIN novo e pode trocar depois) ou remova um cadastro. Remover apaga também os dias e o Espelho da pessoa.</p>
         <ul class="pessoas" id="pessoas"></ul>
+      </section>
+    </section>
+
+    <section id="p-conta" role="tabpanel" aria-labelledby="contaTitulo" hidden>
+      <div class="panel-h">
+        <h2 id="contaTitulo">Meu desafio</h2>
+        <p class="lead">As suas regras pessoais. Mude quando precisar: vale a partir de hoje.</p>
+      </div>
+      <form id="desafioForm" class="form ajuste-conta" novalidate>
+        <fieldset class="escolha">
+          <legend>Quantas vezes você treina por semana?</legend>
+          <label class="opcao" for="dT5"><input type="radio" name="dTreinos" id="dT5" value="5"><span><strong>5 vezes</strong><small>2 dias de descanso por semana</small></span></label>
+          <label class="opcao" for="dT6"><input type="radio" name="dTreinos" id="dT6" value="6"><span><strong>6 vezes</strong><small>1 dia de descanso por semana</small></span></label>
+        </fieldset>
+        <div class="field"><label for="dDieta">Sua dieta, em uma frase</label><input type="text" id="dDieta" maxlength="140" autocomplete="off" placeholder="Ex.: sem açúcar e sem fritura, 4 refeições por dia"><p class="campo-dica">Aparece no item Dieta, todos os dias. Só você vê.</p></div>
+        <div class="acoes-form"><button type="submit" class="primary" id="desafioBtn">Salvar meu desafio</button><span class="pag-status" id="desafioStatus" aria-live="polite"></span></div>
+      </form>
+
+      <section class="bloco" aria-labelledby="contaH">
+        <h3 id="contaH">Sua conta</h3>
+        <p class="hint">Troque o seu PIN quando quiser. Esqueceu? Peça para o administrador zerar.</p>
+        <form id="pinForm" class="cfg" novalidate>
+          <div class="field"><label for="pAtual">PIN atual (4 dígitos)</label><input type="password" id="pAtual" class="pin" inputmode="numeric" autocomplete="current-password" maxlength="4"></div>
+          <div class="field"><label for="pNovo">PIN novo (4 dígitos)</label><input type="password" id="pNovo" class="pin" inputmode="numeric" autocomplete="new-password" maxlength="4"></div>
+          <button type="submit" class="primary">Trocar PIN</button>
+        </form>
+        <p class="sair-linha"><button type="button" class="link" id="sair2">Sair deste aparelho</button></p>
       </section>
     </section>
   </div>
@@ -574,8 +632,9 @@ const GRUPOS=[
   {g:'espirito',t:'Espírito',h:'o dia entregue a Deus'}
 ];
 const TABS=['hoje','espelho','time'];
+const PAINEIS=[...TABS,'conta']; // Meu desafio abre pelo topo
 const DEFAULT_CFG={inicio:'2026-10-06',dias:74,codigo:null};
-const K_SESSAO='sucesso:sessao',K_NOME='sucesso:nome',K_CACHE='sucesso:cache',K_ABA='sucesso:aba';
+const K_SESSAO='sucesso:sessao',K_NOME='sucesso:nome',K_CACHE='sucesso:cache',K_ABA='sucesso:aba',K_RASCUNHO='sucesso:rascunho';
 const DAY=864e5;
 const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -605,7 +664,7 @@ function fmtMinShort(m){m=Math.round(m);if(m<60)return m+'min';const h=Math.floo
 const iniciais=n=>(n||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase()||'·';
 
 /* ---------- estado ---------- */
-const S={token:null,pessoa:null,cfg:{...DEFAULT_CFG},dias:{},espelho:[],placar:true,tab:'hoje',sel:null,
+const S={token:null,pessoa:null,cfg:{...DEFAULT_CFG},dias:{},espelho:[],diario:[],placar:true,tab:'hoje',sel:null,
   team:[],teamLoaded:false,teamErr:false,teamEm:0,equipe:[]};
 
 function cleanDias(o){const out={};if(!o||typeof o!=='object')return out;
@@ -618,7 +677,7 @@ const clampCount=v=>{v=Math.round(Number(v));return v>=0&&v<=5?v:0};
 
 function salvarCache(){
   if(!S.pessoa)return;
-  ls.set(K_CACHE,JSON.stringify({pessoa:S.pessoa,cfg:S.cfg,dias:S.dias,espelho:S.espelho,placar:S.placar}));
+  ls.set(K_CACHE,JSON.stringify({pessoa:S.pessoa,cfg:S.cfg,dias:S.dias,espelho:S.espelho,diario:S.diario,placar:S.placar}));
 }
 
 /* ---------- regras do desafio ---------- */
@@ -647,6 +706,8 @@ const ERROS={
   dia_invalido:'Esse dia está fora do desafio.',
   anotacao_invalida:'Escreva a anotação e o tempo, de 1 a 1440 minutos.',
   limite:'O Espelho chegou ao limite de anotações. Apague as mais antigas.',
+  texto_longo:'A página chegou ao limite de 20 mil letras.',
+  min_invalido:'O tempo perdido vai de 0 a 1440 minutos.',
   sem_permissao:'Só administradores podem fazer isso.',
   ajuste_invalido:'Confira a data, a duração (1 a 366 dias) e o código (3 a 40 letras).',
   nao_pode_remover_a_si:'Você não pode remover o seu próprio cadastro.',
@@ -697,7 +758,7 @@ function aplicarDados(r){
   S.cfg={inicio:r.config.inicio,dias:r.config.dias,codigo:r.config.codigo||null};
   const srv=cleanDias(r.dias);
   for(const k of pendentes.keys()){if(S.dias[k]&&S.dias[k].length)srv[k]=S.dias[k];else delete srv[k]} // o que ainda não foi gravado vale
-  S.dias=srv;S.espelho=cleanEsp(r.espelho);S.placar=!!r.pessoa.placar;
+  S.dias=srv;S.espelho=cleanEsp(r.espelho);S.diario=cleanDiario(r.diario);S.placar=!!r.pessoa.placar;
   S.sel=clampSel(S.sel);
 }
 async function carregar(){
@@ -757,10 +818,12 @@ async function fazerCadastro(e){
   toast(r.importado?'Bem-vindo. O seu progresso anterior já está aqui.':'Cadastro feito. Bom desafio!');
 }
 function limparSessao(){
-  S.token=null;S.pessoa=null;S.dias={};S.espelho=[];S.team=[];S.teamLoaded=false;S.equipe=[];pendentes.clear();
-  ls.del(K_SESSAO);ls.del(K_CACHE);
+  S.token=null;S.pessoa=null;S.dias={};S.espelho=[];S.diario=[];S.team=[];S.teamLoaded=false;S.equipe=[];pendentes.clear();
+  clearTimeout(PAG.timer);PAG.dia=null;PAG.texto='';PAG.min=null;PAG.sujo=false;PAG.carregado=false;PAG.versao++;
+  ls.del(K_SESSAO);ls.del(K_CACHE);ls.del(K_RASCUNHO);
 }
-function sair(){
+async function sair(){
+  await gravarPagina();
   const t=S.token;limparSessao();if(t)rpc('sair',{p_token:t});
   mostrarLogin();
 }
@@ -873,7 +936,7 @@ function renderRegras(k,day,ed){
   const tw=treinosSemana(),total=7-tw,usados=descansosNaSemana(k),folga=day.has('descanso');
   $('#desc-treino').textContent=folga?'Dia de descanso. Ele vale como treino cumprido.':PILARES[1].d;
   const info=$('#folga .folga-info'),btn=$('#folgaBtn'),meta='Meta: '+tw+' treinos por semana';
-  if(folga){info.textContent='Descanso '+(usados+1)+' de '+total+' nesta semana.';btn.textContent='Desfazer o descanso';btn.hidden=!ed}
+  if(folga){info.textContent=usados+1<=total?'Descanso '+(usados+1)+' de '+total+' nesta semana.':'Este descanso passa do limite da semana de '+tw+' treinos. Marque o treino ou ajuste em Meu desafio.';btn.textContent='Desfazer o descanso';btn.hidden=!ed}
   else if(day.has('treino')||!ed){info.textContent=meta+'.';btn.hidden=true}
   else if(usados>=total){info.textContent=meta+'. '+(total===1?'O descanso desta semana já foi usado.':'Os descansos desta semana já foram usados.');btn.hidden=true}
   else{const r=total-usados;info.textContent=meta+'. '+(r===1?'1 descanso livre':r+' descansos livres')+' nesta semana.';btn.textContent='Hoje é meu dia de descanso';btn.hidden=false}
@@ -897,22 +960,31 @@ function formDesafio(pref){
     e.preventDefault();
     const t=Number((f.querySelector('input[type=radio]:checked')||{}).value),d=i.value.trim();
     if(t!==5&&t!==6){toast(ERROS.treinos_invalido);return}
-    bt.disabled=true;const r=await rpc('definir_desafio',{p_token:S.token,p_treinos:t,p_dieta:d});bt.disabled=false;
-    if(!r.ok){if(r.erro!=='sessao')toast(msg(r));return}
-    S.pessoa={...S.pessoa,treinos_semana:t,dieta:d};salvarCache();
-    if(document.activeElement)document.activeElement.blur();
-    renderAll();toast('Desafio ajustado.');
+    bt.disabled=true;if(document.activeElement)document.activeElement.blur();
+    await salvarDesafio(t,d);bt.disabled=false;
   });
   return f;
 }
 function renderDesafio(){
   const pend=!!(S.pessoa&&S.pessoa.dieta==null),h=$('#ajusteHoje');
   h.hidden=!pend;
-  if(pend&&!h.dataset.pronto){h.textContent='';h.append(el('h2',null,'Ajuste o seu desafio'),el('p','lead','Duas respostas e você começa. Dá para mudar depois, na aba Time.'),formDesafio('o'));h.dataset.pronto='1'}
+  if(pend&&!h.dataset.pronto){h.textContent='';h.append(el('h2',null,'Ajuste o seu desafio'),el('p','lead','Duas respostas e você começa. Dá para mudar quando quiser, em Meu desafio, no topo.'),formDesafio('o'));h.dataset.pronto='1'}
   if(!pend){delete h.dataset.pronto;h.textContent=''}
-  const c=$('#desafioConta');
-  if(document.activeElement&&c.contains(document.activeElement))return;
-  c.textContent='';if(S.pessoa)c.append(formDesafio('c'));
+  preencherDesafio(false);
+}
+/* Meu desafio: o formulário só é preenchido de novo se não houver mudança por salvar */
+let desafioSujo=false;
+function preencherDesafio(forcar){
+  if(!S.pessoa||(desafioSujo&&!forcar))return;
+  const t=treinosSemana();$('#dT5').checked=t===5;$('#dT6').checked=t===6;
+  $('#dDieta').value=S.pessoa.dieta||'';desafioSujo=false;
+  if(forcar)$('#desafioStatus').textContent='';
+}
+async function salvarDesafio(t,d){
+  const r=await rpc('definir_desafio',{p_token:S.token,p_treinos:t,p_dieta:d});
+  if(!r.ok){if(r.erro!=='sessao')toast(msg(r));return r}
+  S.pessoa={...S.pessoa,treinos_semana:t,dieta:d};desafioSujo=false;salvarCache();renderAll();toast('Desafio ajustado.');
+  return r;
 }
 function renderFolha(){
   const g=$('#folha');g.textContent='';
@@ -934,33 +1006,86 @@ function renderFolha(){
     g.append(cell);
   }
 }
-function renderEspelho(){
-  const tk=todayKey(),t=abs(tk),ws=t-wd(tk),b=bounds();
-  let hoje=0,sem=0,tot=0;
-  for(const it of S.espelho){const n=abs(it.dia);if(it.dia===tk)hoje+=it.min;if(n>=ws&&n<=ws+6)sem+=it.min;if(n>=b.s&&n<=b.e)tot+=it.min}
-  $('#espHoje').textContent=fmtMinShort(hoje);$('#espSemana').textContent=fmtMinShort(sem);$('#espTotal').textContent=fmtMinShort(tot);
-  const list=$('#espList');list.textContent='';
-  if(!S.espelho.length){list.append(el('p','empty','Nada anotado ainda. A primeira anotação honesta já é uma vitória.'));return}
-  const groups=new Map();
-  for(const it of [...S.espelho].sort((a,b)=>b.dia.localeCompare(a.dia)||b.t-a.t)){if(!groups.has(it.dia))groups.set(it.dia,[]);groups.get(it.dia).push(it)}
-  for(const [dia,items] of groups){
-    const sec=el('section','esp-day');const h=el('h3');
-    h.append(el('span',null,fmt(F_SHORT,dia).replace(/\./g,'')),el('span','sum',fmtMin(items.reduce((s,i)=>s+i.min,0))));
-    const ul=el('ul');
-    for(const it of items){
-      const li=el('li','esp-item');
-      li.append(el('span','txt',it.txt||'(sem texto)'),el('span','min',fmtMin(it.min)));
-      const del=el('button','link','Apagar');del.type='button';
-      del.addEventListener('click',()=>armar(del,'Apagar',async()=>{
-        del.disabled=true;
-        const r=await rpc('apagar_espelho',{p_token:S.token,p_id:it.id});
-        if(!r.ok){del.disabled=false;if(r.erro!=='sessao')toast(msg(r));return}
-        S.espelho=S.espelho.filter(i=>i.id!==it.id);salvarCache();renderEspelho();toast('Anotação apagada.');
-      }));
-      li.append(del);ul.append(li);
-    }
-    sec.append(h,ul);list.append(sec);
+/* ---------- Diário autobiográfico (aba Espelho): uma página por dia, guardada sozinha ---------- */
+const PAG={dia:null,texto:'',min:null,carregado:false,sujo:false,gravando:false,denovo:false,timer:null,versao:0};
+function cleanDiario(a){if(!Array.isArray(a))return[];return a.filter(d=>d&&validKey(d.dia)).map(d=>({dia:d.dia,resumo:String(d.resumo||''),min:Number(d.min)||0,tam:Number(d.tam)||0}))}
+const chaveRascunho=dia=>(S.pessoa&&S.pessoa.id)+'|'+dia;
+const rascunhos=()=>ls.json(K_RASCUNHO)||{};
+function guardarRascunho(){if(!S.pessoa||!PAG.dia)return;const r=rascunhos();r[chaveRascunho(PAG.dia)]={texto:PAG.texto,min:PAG.min};ls.set(K_RASCUNHO,JSON.stringify(r))}
+function limparRascunho(dia){const r=rascunhos();delete r[chaveRascunho(dia)];ls.set(K_RASCUNHO,JSON.stringify(r))}
+function diaDiario(){const b=bounds();return fromAbs(Math.max(b.s,Math.min(b.t,b.e)))}
+function statusPagina(t,erro){const e=$('#pagStatus');e.textContent=t||'';e.classList.toggle('erro',!!erro)}
+function crescer(ta){ta.style.height='auto';ta.style.height=Math.max(352,ta.scrollHeight)+'px'}
+function syncChips(){const v=String(Math.round(Number($('#espMin').value)));for(const b of document.querySelectorAll('#chips button'))b.setAttribute('aria-pressed',String(b.dataset.min===v))}
+async function abrirPagina(dia){
+  if(PAG.sujo)await gravarPagina();
+  const v=++PAG.versao;
+  PAG.dia=dia;PAG.texto='';PAG.min=null;PAG.carregado=false;PAG.sujo=false;
+  renderPagina(true);statusPagina('Abrindo a página…');
+  const r=await rpc('ler_diario',{p_token:S.token,p_dia:dia});
+  if(v!==PAG.versao)return;
+  if(r.ok){PAG.texto=r.texto||'';PAG.min=r.min==null?null:Number(r.min)}
+  const rasc=rascunhos()[chaveRascunho(dia)];
+  if(rasc&&(rasc.texto!==PAG.texto||rasc.min!==PAG.min)){PAG.texto=rasc.texto||'';PAG.min=rasc.min==null?null:rasc.min;PAG.sujo=true;agendarPagina(300)}
+  PAG.carregado=true;renderPagina(true);statusPagina(r.ok||PAG.sujo?'':msg(r),!r.ok&&!PAG.sujo);
+  renderIndice();renderTotais();
+}
+function agendarPagina(ms){clearTimeout(PAG.timer);PAG.timer=setTimeout(gravarPagina,ms==null?1200:ms)}
+async function gravarPagina(){
+  clearTimeout(PAG.timer);
+  if(!PAG.sujo||!PAG.dia||!S.token)return;
+  if(PAG.gravando){PAG.denovo=true;return}
+  PAG.gravando=true;statusPagina('Guardando…');
+  const dia=PAG.dia,texto=PAG.texto,min=PAG.min;PAG.sujo=false;
+  const r=await rpc('salvar_diario',{p_token:S.token,p_dia:dia,p_texto:texto,p_min:min});
+  PAG.gravando=false;
+  if(!r.ok){
+    if(r.erro==='sessao')return;
+    if(dia===PAG.dia)PAG.sujo=true;
+    statusPagina(r.erro==='rede'||r.erro==='servidor'?'Sem conexão. A página ficou guardada neste aparelho e sobe quando a conexão voltar.':msg(r),true);
+    return;
   }
+  S.diario=S.diario.filter(d=>d.dia!==dia);
+  if(texto.trim()||min)S.diario.push({dia,resumo:texto.replace(/\s+/g,' ').trim().slice(0,160),min:min||0,tam:texto.length});
+  S.diario.sort((a,b)=>b.dia.localeCompare(a.dia));
+  if(!(PAG.sujo&&PAG.dia===dia))limparRascunho(dia);
+  salvarCache();
+  if(dia===PAG.dia){const t=new Date();statusPagina('Guardado às '+pad(t.getHours())+':'+pad(t.getMinutes()))}
+  renderIndice();renderTotais();
+  if(PAG.denovo){PAG.denovo=false;gravarPagina()}
+}
+function renderPagina(valores){
+  if(!PAG.dia)return;
+  const b=bounds(),ta=$('#diarioTxt'),mi=$('#espMin');
+  $('#pagData').textContent=cap(fmt(F_LONG,PAG.dia));
+  $('#pagDia').textContent='Dia '+(abs(PAG.dia)-b.s+1);
+  $('#diarioHoje').hidden=PAG.dia===diaDiario();
+  ta.readOnly=!PAG.carregado;mi.disabled=!PAG.carregado;
+  if(valores||document.activeElement!==ta)ta.value=PAG.texto;
+  if(valores||document.activeElement!==mi)mi.value=PAG.min?String(PAG.min):'';
+  crescer(ta);syncChips();
+}
+function renderIndice(){
+  const ol=$('#indice');ol.textContent='';
+  const itens=S.diario.filter(d=>d.dia!==PAG.dia);
+  $('#paginasVazio').hidden=itens.length>0;
+  for(const d of itens){
+    const li=el('li'),b=el('button','pag-item');b.type='button';
+    b.append(el('span','pi-data',fmt(F_SHORT,d.dia).replace(/\./g,'')),el('span','pi-resumo',d.resumo||'Só o tempo perdido anotado.'));
+    if(d.min)b.append(el('span','pi-min',fmtMin(d.min)));
+    b.addEventListener('click',async()=>{await abrirPagina(d.dia);$('.pagina').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})});
+    li.append(b);ol.append(li);
+  }
+}
+function renderTotais(){
+  const tk=todayKey(),t=abs(tk),ws=t-wd(tk),b=bounds();let hoje=0,sem=0,tot=0;
+  const mins=new Map(S.diario.map(d=>[d.dia,d.min||0]));if(PAG.dia&&PAG.carregado)mins.set(PAG.dia,PAG.min||0);
+  for(const [dia,m] of mins){const n=abs(dia);if(dia===tk)hoje+=m;if(n>=ws&&n<=ws+6)sem+=m;if(n>=b.s&&n<=b.e)tot+=m}
+  $('#espHoje').textContent=fmtMinShort(hoje);$('#espSemana').textContent=fmtMinShort(sem);$('#espTotal').textContent=fmtMinShort(tot);
+}
+function renderEspelho(){
+  if(S.pessoa&&S.token&&!PAG.dia){abrirPagina(diaDiario());return}
+  renderPagina();renderIndice();renderTotais();
 }
 /* Confirmação em dois toques, sem diálogo */
 function armar(btn,rotulo,acao){
@@ -1043,9 +1168,12 @@ function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeou
 /* ---------- abas e eventos ---------- */
 function setTab(t,focus){
   S.tab=t;
-  for(const x of TABS){const b=$('#tab-'+x),on=x===t;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1;$('#p-'+x).hidden=!on}
-  if(focus)$('#tab-'+t).focus();
+  for(const x of PAINEIS)$('#p-'+x).hidden=x!==t;
+  for(const x of TABS){const b=$('#tab-'+x),on=x===t;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=(on||(t==='conta'&&x==='hoje'))?0:-1}
+  $('#abrirDesafio').setAttribute('aria-current',t==='conta'?'page':'false');
+  if(focus&&TABS.includes(t))$('#tab-'+t).focus();
   ls.set(K_ABA,t);renderHead();
+  if(t==='conta')preencherDesafio(true);
   if(t==='time'&&S.token&&Date.now()-S.teamEm>30000)carregarPlacar();
 }
 function bind(){
@@ -1054,6 +1182,18 @@ function bind(){
   $('#irCadastro').addEventListener('click',()=>{erroLogin('l','');mostrarLogin('cadastro');const n=$('#lNome').value.trim();if(n&&!$('#cNome').value)$('#cNome').value=n;$('#cNome').focus()});
   $('#irEntrar').addEventListener('click',()=>{erroLogin('c','');mostrarLogin();$('#lNome').focus()});
   $('#sair').addEventListener('click',sair);
+  $('#sair2').addEventListener('click',sair);
+  $('#abrirDesafio').addEventListener('click',()=>{setTab('conta');window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'})});
+  const df=$('#desafioForm');
+  df.addEventListener('input',()=>{desafioSujo=true});
+  df.addEventListener('change',()=>{desafioSujo=true});
+  df.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const t=Number((df.querySelector('input[name=dTreinos]:checked')||{}).value),d=$('#dDieta').value.trim();
+    if(t!==5&&t!==6){toast(ERROS.treinos_invalido);return}
+    const b=$('#desafioBtn');b.disabled=true;const r=await salvarDesafio(t,d);b.disabled=false;
+    if(r.ok)$('#desafioStatus').textContent='Salvo. A aba Hoje já usa estas regras.';
+  });
 
   for(const x of TABS)$('#tab-'+x).addEventListener('click',()=>setTab(x));
   $('#tabs').addEventListener('keydown',e=>{
@@ -1065,24 +1205,19 @@ function bind(){
   $('#nextDay').addEventListener('click',()=>selectDay(fromAbs(abs(S.sel)+1)));
   $('#goToday').addEventListener('click',()=>selectDay(todayKey()));
 
-  const minIn=$('#espMin');
-  const syncChips=()=>{for(const b of document.querySelectorAll('#chips button'))b.setAttribute('aria-pressed',String(b.dataset.min===String(Math.round(Number(minIn.value)))))};
-  for(const b of document.querySelectorAll('#chips button'))b.addEventListener('click',()=>{minIn.value=b.dataset.min;syncChips()});
-  minIn.addEventListener('input',syncChips);
-  $('#espForm').addEventListener('submit',async e=>{
-    e.preventDefault();
-    const txt=$('#espTxt').value.trim(),min=Math.round(Number(minIn.value)),err=$('#espErr');
-    if(!txt){err.textContent='Escreva a mentira em poucas palavras.';err.hidden=false;$('#espTxt').focus();return}
-    if(!(min>=1&&min<=1440)){err.textContent='Diga quantos minutos você perdeu, de 1 a 1440.';err.hidden=false;minIn.focus();return}
-    err.hidden=true;const b=$('#espBtn');b.disabled=true;
-    const dia=todayKey();
-    const r=await rpc('anotar_espelho',{p_token:S.token,p_dia:dia,p_txt:txt,p_min:min});
-    b.disabled=false;
-    if(!r.ok){if(r.erro!=='sessao'){err.textContent=msg(r);err.hidden=false}return}
-    S.espelho=[{id:String(r.id),dia,txt:txt.slice(0,280),min,t:Number(r.t)||Date.now()},...S.espelho];
-    salvarCache();$('#espTxt').value='';minIn.value='';syncChips();renderEspelho();
-    toast('Anotado. Olhar a verdade já é começar a vencer.');
+  const ta=$('#diarioTxt'),minIn=$('#espMin');
+  ta.addEventListener('input',()=>{if(!PAG.carregado)return;PAG.texto=ta.value;PAG.sujo=true;crescer(ta);guardarRascunho();statusPagina('');agendarPagina()});
+  ta.addEventListener('blur',()=>{if(PAG.sujo)gravarPagina()});
+  const mudarMin=()=>{if(!PAG.carregado)return;const v=Math.round(Number(minIn.value));PAG.min=v>0?Math.min(1440,v):null;PAG.sujo=true;syncChips();renderTotais();guardarRascunho();agendarPagina(600)};
+  minIn.addEventListener('input',mudarMin);
+  for(const b of document.querySelectorAll('#chips button'))b.addEventListener('click',()=>{minIn.value=b.dataset.min;mudarMin()});
+  for(const g of document.querySelectorAll('.guia'))g.addEventListener('click',()=>{
+    if(!PAG.carregado)return;
+    const v=ta.value.replace(/\s+$/,'');ta.value=(v?v+'\n\n':'')+g.dataset.q+'\n';
+    PAG.texto=ta.value;PAG.sujo=true;crescer(ta);guardarRascunho();agendarPagina();
+    ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);
   });
+  $('#diarioHoje').addEventListener('click',()=>abrirPagina(diaDiario()));
 
   $('#optPlacar').addEventListener('change',async e=>{
     const on=e.target.checked;S.placar=on;renderTeam();
@@ -1106,10 +1241,11 @@ function bind(){
     S.cfg={inicio,dias,codigo};S.sel=clampSel(S.sel);salvarCache();renderAll();toast('Ajustes salvos para o time inteiro.');
   });
 
-  window.addEventListener('online',()=>{gravar()});
+  window.addEventListener('online',()=>{gravar();gravarPagina()});
   let lastToday=todayKey();
   document.addEventListener('visibilitychange',()=>{
-    if(document.hidden||!S.token)return;
+    if(document.hidden){gravarPagina();return}
+    if(!S.token)return;
     gravar();
     const t=todayKey();if(t!==lastToday){const follow=S.sel===lastToday;lastToday=t;if(follow)S.sel=clampSel(t);renderAll()}
     if(Date.now()-S.teamEm>60000){carregar()}
@@ -1118,14 +1254,14 @@ function bind(){
 
 /* ---------- início ---------- */
 initGroups();bind();
-const aba=ls.get(K_ABA);if(TABS.includes(aba))S.tab=aba;
-const h=(location.hash||'').slice(1);if(TABS.includes(h))S.tab=h;
+const aba=ls.get(K_ABA);if(PAINEIS.includes(aba))S.tab=aba;
+const h=(location.hash||'').slice(1);if(PAINEIS.includes(h))S.tab=h;
 S.sel=clampSel(todayKey());
 const tok=ls.get(K_SESSAO);
 if(tok&&CONECTADO){
   S.token=tok;
   const c=ls.json(K_CACHE);
-  if(c&&c.pessoa){S.pessoa=c.pessoa;S.cfg={...DEFAULT_CFG,...(c.cfg||{})};S.dias=cleanDias(c.dias);S.espelho=cleanEsp(c.espelho);S.placar=c.placar!==false;S.sel=clampSel(S.sel);mostrarApp()}
+  if(c&&c.pessoa){S.pessoa=c.pessoa;S.cfg={...DEFAULT_CFG,...(c.cfg||{})};S.dias=cleanDias(c.dias);S.espelho=cleanEsp(c.espelho);S.diario=cleanDiario(c.diario);S.placar=c.placar!==false;S.sel=clampSel(S.sel);mostrarApp()}
   carregar();
 }else{
   mostrarLogin();

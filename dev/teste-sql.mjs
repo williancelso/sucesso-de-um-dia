@@ -101,6 +101,26 @@ ok(r.espelho.length === 1, 'outra pessoa não consegue apagar o Espelho da Ana',
 r = await call('meus_dados', { p_token: tokW });
 ok(r.espelho.length === 0, 'Willian não vê o Espelho da Ana', r.espelho);
 
+// Diário autobiográfico
+await db.exec(await readFile(raiz + '/supabase/01-estrutura.sql', 'utf8')); // rodar de novo leva o Espelho antigo para o diário
+r = await call('ler_diario', { p_token: tokAna, p_dia: '2026-10-21' });
+ok(r.ok && r.texto === '• Rolei o feed' && r.min === 30, 'anotação antiga do Espelho virou página do diário', r);
+r = await call('salvar_diario', { p_token: tokAna, p_dia: '2026-10-28', p_texto: 'Confesso que adiei o treino.\nPercebi que foi preguiça.', p_min: 15 });
+ok(r.ok, 'salvar uma página do diário', r);
+r = await call('ler_diario', { p_token: tokAna, p_dia: '2026-10-28' });
+ok(r.texto === 'Confesso que adiei o treino.\nPercebi que foi preguiça.' && r.min === 15, 'ler a página guarda o texto e as quebras de linha', r);
+r = await call('meus_dados', { p_token: tokAna });
+ok(r.diario.length === 2 && r.diario[0].dia === '2026-10-28' && r.diario[0].resumo === 'Confesso que adiei o treino. Percebi que foi preguiça.', 'índice do diário com resumo, mais recente primeiro', r.diario);
+r = await call('ler_diario', { p_token: tokW, p_dia: '2026-10-28' });
+ok(r.ok && r.texto === '' && r.min === null, 'Willian não lê o diário da Ana', r);
+r = await call('salvar_diario', { p_token: tokAna, p_dia: '2026-12-20', p_texto: 'futuro', p_min: null });
+ok(r.erro === 'dia_invalido', 'não escreve em dia que ainda não chegou', r);
+r = await call('salvar_diario', { p_token: tokAna, p_dia: '2026-10-28', p_texto: 'x'.repeat(20001), p_min: null });
+ok(r.erro === 'texto_longo', 'página acima de 20 mil letras é recusada', r);
+r = await call('salvar_diario', { p_token: tokAna, p_dia: '2026-10-28', p_texto: '   ', p_min: 0 });
+r = await call('meus_dados', { p_token: tokAna });
+ok(r.diario.length === 1, 'apagar o texto e os minutos apaga a página', r.diario.map(d => d.dia));
+
 r = await call('placar', { p_token: tokAna });
 const nomes = r.pessoas.map(p => p.nome);
 ok(r.ok && nomes.includes('Willian Celso') && nomes.includes('Ana Letícia'), 'placar mostra quem marcou algum dia', nomes);

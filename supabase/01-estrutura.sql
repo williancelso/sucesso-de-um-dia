@@ -77,6 +77,22 @@ create table if not exists public.espelho (
 );
 create index if not exists espelho_pessoa_idx on public.espelho (pessoa_id);
 
+-- Diário autobiográfico: uma página por dia (confissão, reflexão e análise) e o tempo perdido com mentiras
+create table if not exists public.diario (
+  pessoa_id     uuid not null references public.pessoas(id) on delete cascade,
+  dia           date not null,
+  texto         text not null default '' check (char_length(texto) <= 20000),
+  min           int check (min is null or min between 0 and 1440),
+  atualizado_em timestamptz not null default now(),
+  primary key (pessoa_id, dia)
+);
+-- As anotações antigas do Espelho viram a página do diário daquele dia (só na primeira vez)
+insert into public.diario (pessoa_id, dia, texto, min)
+select e.pessoa_id, e.dia, string_agg('• ' || e.txt, E'\n' order by e.criado_em), least(sum(e.min), 1440)::int
+from public.espelho e
+group by e.pessoa_id, e.dia
+on conflict (pessoa_id, dia) do nothing;
+
 -- Progresso antigo esperando o cadastro da pessoa (ver 02-importar-*.sql)
 create table if not exists public.importacao (
   slug  text primary key,
@@ -89,9 +105,10 @@ alter table public.pessoas    enable row level security;
 alter table public.sessoes    enable row level security;
 alter table public.dias       enable row level security;
 alter table public.espelho    enable row level security;
+alter table public.diario     enable row level security;
 alter table public.importacao enable row level security;
 
-revoke all on public.config, public.pessoas, public.sessoes, public.dias, public.espelho, public.importacao
+revoke all on public.config, public.pessoas, public.sessoes, public.dias, public.espelho, public.diario, public.importacao
   from anon, authenticated;
 
 -- ---------------------------------------------------------------------
@@ -155,7 +172,13 @@ language sql stable security definer set search_path = '' as $$
                            'id', e.id, 'dia', e.dia, 'txt', e.txt, 'min', e.min,
                            't', (extract(epoch from e.criado_em) * 1000)::bigint)
                          order by e.criado_em desc)
-                         from public.espelho e where e.pessoa_id = p.id), '[]'::json)
+                         from public.espelho e where e.pessoa_id = p.id), '[]'::json),
+    -- índice do diário: dia, começo do texto e minutos (o texto inteiro vem por ler_diario)
+    'diario', coalesce((select json_agg(json_build_object(
+                           'dia', d.dia, 'resumo', left(regexp_replace(d.texto, '\s+', ' ', 'g'), 160),
+                           'min', d.min, 'tam', char_length(d.texto))
+                         order by d.dia desc)
+                         from public.diario d where d.pessoa_id = p.id), '[]'::json)
   )
   from public.pessoas p where p.id = p_pessoa
 $$;
@@ -321,6 +344,36 @@ begin
   return json_build_object('ok', true);
 end $$;
 
+create or replace function public.salvar_diario(p_token text, p_dia date, p_texto text, p_min int) returns json
+language plpgsql security definer set search_path = '' as $$
+declare v uuid := public._sessao(p_token); c public.config%rowtype; t text := coalesce(p_texto, '');
+begin
+  if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
+  select * into c from public.config where id = 1;
+  if p_dia is null or p_dia < c.inicio or p_dia > c.inicio + c.dias - 1
+     or p_dia > (now() at time zone 'utc')::date + 1 then
+    return json_build_object('ok', false, 'erro', 'dia_invalido');
+  end if;
+  if char_length(t) > 20000 then return json_build_object('ok', false, 'erro', 'texto_longo'); end if;
+  if p_min is not null and (p_min < 0 or p_min > 1440) then return json_build_object('ok', false, 'erro', 'min_invalido'); end if;
+  if trim(t) = '' and coalesce(p_min, 0) = 0 then
+    delete from public.diario where pessoa_id = v and dia = p_dia;
+  else
+    insert into public.diario (pessoa_id, dia, texto, min) values (v, p_dia, t, nullif(p_min, 0))
+    on conflict (pessoa_id, dia) do update set texto = excluded.texto, min = excluded.min, atualizado_em = now();
+  end if;
+  return json_build_object('ok', true);
+end $$;
+
+create or replace function public.ler_diario(p_token text, p_dia date) returns json
+language plpgsql security definer set search_path = '' as $$
+declare v uuid := public._sessao(p_token); d public.diario%rowtype;
+begin
+  if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
+  select * into d from public.diario where pessoa_id = v and dia = p_dia;
+  return json_build_object('ok', true, 'texto', coalesce(d.texto, ''), 'min', d.min);
+end $$;
+
 create or replace function public.definir_desafio(p_token text, p_treinos int, p_dieta text) returns json
 language plpgsql security definer set search_path = '' as $$
 declare v uuid := public._sessao(p_token); d text := trim(coalesce(p_dieta, ''));
@@ -430,6 +483,7 @@ revoke execute on function
   public.cadastrar(text, text, text), public.entrar(text, text), public.sair(text),
   public.trocar_pin(text, text, text), public.meus_dados(text), public.salvar_dia(text, date, jsonb),
   public.anotar_espelho(text, date, text, int), public.apagar_espelho(text, uuid),
+  public.salvar_diario(text, date, text, int), public.ler_diario(text, date),
   public.definir_desafio(text, int, text), public.definir_placar(text, boolean), public.placar(text),
   public.ajustar_desafio(text, date, int, text),
   public.equipe(text), public.zerar_pin(text, uuid, text), public.remover_pessoa(text, uuid)
@@ -439,6 +493,7 @@ grant execute on function
   public.cadastrar(text, text, text), public.entrar(text, text), public.sair(text),
   public.trocar_pin(text, text, text), public.meus_dados(text), public.salvar_dia(text, date, jsonb),
   public.anotar_espelho(text, date, text, int), public.apagar_espelho(text, uuid),
+  public.salvar_diario(text, date, text, int), public.ler_diario(text, date),
   public.definir_desafio(text, int, text), public.definir_placar(text, boolean), public.placar(text),
   public.ajustar_desafio(text, date, int, text),
   public.equipe(text), public.zerar_pin(text, uuid, text), public.remover_pessoa(text, uuid)

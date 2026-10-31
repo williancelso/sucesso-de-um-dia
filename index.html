@@ -241,6 +241,11 @@ input:disabled,textarea:disabled{opacity:.55}
 .esp-item .link,.pessoa .link{color:var(--cinza);font-weight:500;font-size:12.5px;text-decoration-color:var(--linha)}
 .esp-item .link.armed,.pessoa .link.armed{color:var(--azul);font-weight:600;text-decoration-color:var(--dourado)}
 .empty{margin-top:22px;color:var(--cinza);font-size:14px}
+.esp-guia{margin-top:22px;max-width:34rem;font-size:15.5px;line-height:1.6}
+#p-espelho > .priv{margin-top:8px}
+.reflexao{margin-top:52px;padding-top:26px;border-top:1px solid var(--linha);max-width:34rem}
+.reflexao p{font-size:15.5px;line-height:1.75}
+.reflexao .quote{margin-top:26px}
 /* Frase-assinatura: serifada, em bordô */
 .quote{margin:52px 0 0;max-width:30rem;font-family:var(--f-serif);font-weight:500;font-size:29px;line-height:1.18;color:var(--bordo)}
 
@@ -432,7 +437,7 @@ input:disabled,textarea:disabled{opacity:.55}
           <p>A vontade é uma lanterna que, de fábrica, aponta para o que é fácil: gula, preguiça, ira. Cada hábito é virar essa lanterna, com força, para as virtudes. É daí que vem a força de vontade.</p>
           <p>Você treina 5 ou 6 vezes por semana. Nos dias de folga, marque o descanso: ele vale como treino cumprido.</p>
           <p>Fez os cinco? O dia está vencido. Você venceu a si mesmo. À noite, na oração, entregue o seu desenho a Deus.</p>
-          <p>No Espelho, anote com extrema honestidade o tempo que você perde com as pequenas mentiras que conta para si mesmo.</p>
+          <p>No Espelho, anote com extrema honestidade o tempo que você perde com as pequenas mentiras que conta para si.</p>
         </div>
       </details>
     </section>
@@ -440,10 +445,11 @@ input:disabled,textarea:disabled{opacity:.55}
     <section id="p-espelho" role="tabpanel" aria-labelledby="tab-espelho" hidden>
       <div class="panel-h">
         <h2>Espelho</h2>
-        <p class="lead">Quanto tempo você perdeu hoje com as mentiras que conta para si mesmo? A mentira nunca começa grande. Anote com extrema honestidade, mesmo as pequenas.</p>
-        <p class="priv">Ninguém do time vê o que você escreve aqui. O placar mostra só os seus dias.</p>
+        <p class="lead">A cada mentira que você conta para si, a sua personalidade se quebra um pouco mais, como um espelho que trinca.</p>
       </div>
       <figure class="ilustra"><img src="img/espelho.jpg" alt="Espelho antigo com trincas finas." width="1200" height="800" loading="lazy"></figure>
+      <p class="esp-guia">Quanto tempo você perdeu hoje com essas mentiras? Elas nunca começam grandes. Anote com extrema honestidade, mesmo as pequenas.</p>
+      <p class="priv">Ninguém do time vê o que você escreve aqui. O placar mostra só os seus dias.</p>
 
       <form id="espForm" class="esp-form" novalidate>
         <div class="field">
@@ -474,7 +480,10 @@ input:disabled,textarea:disabled{opacity:.55}
 
       <div id="espList" class="esp-list"></div>
 
-      <blockquote class="quote">A cada mentira, uma trinca no espelho. A verdade, com sacrifício, derrete o vidro e o torna inteiro de novo.</blockquote>
+      <section class="reflexao" aria-label="A chama que refaz o espelho">
+        <p>Ser honesto e encarar a verdade exigem sacrifício. Esse sacrifício é uma força da alma, que pode ser simbolizada por uma chama. Mantida acesa com trabalho, sacrifício e honestidade, é essa chama que derrete o espelho trincado. Aquecido de novo e de novo, o vidro retoma a sua forma original e, então, ganha mais força.</p>
+        <blockquote class="quote">Uma personalidade quebrada em mil pedaços jamais será capaz de fazer grandes coisas, nem pequenas. E, principalmente, de amar a Deus e aos outros.</blockquote>
+      </section>
     </section>
 
     <section id="p-time" role="tabpanel" aria-labelledby="tab-time" hidden>

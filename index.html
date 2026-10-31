@@ -120,7 +120,6 @@ h3{font-weight:600}
 /* Hoje */
 .group{margin-top:32px}
 .group-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--linha)}
-.group-h .gh{font-size:12.5px;color:var(--cinza)}
 .item{display:flex;gap:16px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--linha);padding:16px 0;cursor:pointer}
 .box{flex:none;width:28px;height:28px;border:1.5px solid var(--azul);display:grid;place-items:center;transition:background-color .15s}
 .box svg{width:16px;height:16px;fill:none;stroke:var(--marfim);stroke-width:2.6;stroke-linecap:square;opacity:0;transform:scale(.6);transition:opacity .15s,transform .2s cubic-bezier(.3,1.5,.5,1)}
@@ -628,9 +627,9 @@ const PILARES=[
 const PILAR=Object.fromEntries(PILARES.map(p=>[p.k,p]));
 const CHAVES=['dieta','treino','descanso','estudo','trabalho','oracao']; // descanso vale no lugar do treino
 const GRUPOS=[
-  {g:'espirito',t:'Espírito',h:'o dia entregue a Deus'},
-  {g:'alma',t:'Alma',h:'a mente em ordem'},
-  {g:'corpo',t:'Corpo',h:'aqui tem dono'}
+  {g:'espirito',t:'Espírito'},
+  {g:'alma',t:'Alma'},
+  {g:'corpo',t:'Corpo'}
 ];
 const TABS=['hoje','espelho','time'];
 const PAINEIS=[...TABS,'conta']; // Meu desafio abre pelo topo
@@ -875,7 +874,7 @@ function initGroups(){
   const host=$('#groups');
   for(const g of GRUPOS){
     const sec=el('div','group');
-    const h=el('div','group-h');h.append(el('span','etq',g.t),el('span','gh',g.h));sec.append(h);
+    const h=el('div','group-h');h.append(el('span','etq',g.t));sec.append(h);
     for(const p of PILARES.filter(x=>x.g===g.g)){
       const b=el('button','item');b.type='button';b.id='pilar-'+p.k;
       b.setAttribute('role','checkbox');b.setAttribute('aria-checked','false');

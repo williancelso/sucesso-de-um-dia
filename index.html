@@ -446,7 +446,7 @@ textarea.pag-texto:focus{border:0}
           <summary>Ler a meditação</summary>
           <div class="med-corpo">
             <p>Pense numa menina de sete anos. Na escola, ela faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga o carinho e o esforço que estão ali. E sabe reconhecer, também, o dia em que a filha não caprichou.</p>
-            <p>Você é essa criança, e Deus é o seu Pai. Cada ato do seu dia é um traço do desenho: o carro, a árvore, a montanha, o sol. A dieta, o treino, o estudo, o trabalho e a oração que você marcou aqui também são traços. Pode sair um sol torto, mas feito com carinho, o melhor que você pôde.</p>
+            <p>Você é essa criança, e Deus é o seu Pai. Cada ato do seu dia é um traço do desenho: o carro, a árvore, a montanha, o sol. A oração, o estudo, o trabalho, a dieta e o treino que você marcou aqui também são traços. Pode sair um sol torto, mas feito com carinho, o melhor que você pôde.</p>
             <p>À noite, na hora da oração, pegue o desenho de hoje:</p>
             <ol class="passos">
               <li><span class="num" aria-hidden="true">01</span><strong>Olhe</strong><span>Repasse o dia com honestidade, traço por traço.</span></li>
@@ -467,7 +467,7 @@ textarea.pag-texto:focus{border:0}
       <details class="sobre" id="sobre">
         <summary>Como funciona o desafio</summary>
         <div class="sobre-body">
-          <p><strong>Cinco hábitos difíceis, porém bons, todos os dias:</strong> dieta, treino, 30 minutos de estudo, trabalho com eficiência e oração.</p>
+          <p><strong>Cinco hábitos difíceis, porém bons, todos os dias:</strong> oração, 30 minutos de estudo, trabalho com eficiência, dieta e treino.</p>
           <p>A vontade é uma lanterna que, de fábrica, aponta para o que é fácil: gula, preguiça, ira. Cada hábito é virar essa lanterna, com força, para as virtudes. É daí que vem a força de vontade.</p>
           <p>Você treina 5 ou 6 vezes por semana. Nos dias de folga, marque o descanso: ele vale como treino cumprido.</p>
           <p>Fez os cinco? O dia está vencido. Você venceu a si mesmo. À noite, na oração, entregue o seu desenho a Deus.</p>
@@ -619,17 +619,18 @@ const $=(s,r)=>(r||document).querySelector(s);
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 
 const PILARES=[
-  {k:'dieta',g:'corpo',t:'Dieta',d:'Comi o que me propus. Disse não à gula.'},
-  {k:'treino',g:'corpo',t:'Treino',d:'Treinei, mesmo sem vontade.'},
+  {k:'oracao',g:'espirito',t:'Oração',d:'Rezei o terço ou vivi a prática da minha fé.'},
   {k:'estudo',g:'alma',t:'Estudo',d:'Li ou estudei por 30 minutos, no mínimo.'},
   {k:'trabalho',g:'alma',t:'Trabalho com eficiência',d:'Trabalhei focado. Cansei? Descansei de verdade, longe do feed.'},
-  {k:'oracao',g:'espirito',t:'Oração',d:'Rezei o terço ou vivi a prática da minha fé.'}
+  {k:'dieta',g:'corpo',t:'Dieta',d:'Comi o que me propus. Disse não à gula.'},
+  {k:'treino',g:'corpo',t:'Treino',d:'Treinei, mesmo sem vontade.'}
 ];
+const PILAR=Object.fromEntries(PILARES.map(p=>[p.k,p]));
 const CHAVES=['dieta','treino','descanso','estudo','trabalho','oracao']; // descanso vale no lugar do treino
 const GRUPOS=[
-  {g:'corpo',t:'Corpo',h:'aqui tem dono'},
+  {g:'espirito',t:'Espírito',h:'o dia entregue a Deus'},
   {g:'alma',t:'Alma',h:'a mente em ordem'},
-  {g:'espirito',t:'Espírito',h:'o dia entregue a Deus'}
+  {g:'corpo',t:'Corpo',h:'aqui tem dono'}
 ];
 const TABS=['hoje','espelho','time'];
 const PAINEIS=[...TABS,'conta']; // Meu desafio abre pelo topo
@@ -932,9 +933,9 @@ function renderHoje(celebrate){
 }
 function renderRegras(k,day,ed){
   const dieta=S.pessoa&&S.pessoa.dieta;
-  $('#desc-dieta').textContent=dieta?'Minha dieta: '+dieta:PILARES[0].d;
+  $('#desc-dieta').textContent=dieta?'Minha dieta: '+dieta:PILAR.dieta.d;
   const tw=treinosSemana(),total=7-tw,usados=descansosNaSemana(k),folga=day.has('descanso');
-  $('#desc-treino').textContent=folga?'Dia de descanso. Ele vale como treino cumprido.':PILARES[1].d;
+  $('#desc-treino').textContent=folga?'Dia de descanso. Ele vale como treino cumprido.':PILAR.treino.d;
   const info=$('#folga .folga-info'),btn=$('#folgaBtn'),meta='Meta: '+tw+' treinos por semana';
   if(folga){info.textContent=usados+1<=total?'Descanso '+(usados+1)+' de '+total+' nesta semana.':'Este descanso passa do limite da semana de '+tw+' treinos. Marque o treino ou ajuste em Meu desafio.';btn.textContent='Desfazer o descanso';btn.hidden=!ed}
   else if(day.has('treino')||!ed){info.textContent=meta+'.';btn.hidden=true}

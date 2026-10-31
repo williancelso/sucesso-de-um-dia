@@ -42,6 +42,16 @@ create table if not exists public.pessoas (
   criado_em     timestamptz not null default now()
 );
 
+-- Meu desafio: 5 ou 6 treinos por semana (o resto são descansos) e a dieta em uma frase
+alter table public.pessoas add column if not exists treinos_semana int not null default 6;
+alter table public.pessoas add column if not exists dieta text;
+do $$ begin
+  alter table public.pessoas add constraint pessoas_treinos_chk check (treinos_semana in (5, 6));
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter table public.pessoas add constraint pessoas_dieta_chk check (dieta is null or char_length(dieta) <= 140);
+exception when duplicate_object then null; end $$;
+
 create table if not exists public.sessoes (
   token_hash text primary key,
   pessoa_id  uuid not null references public.pessoas(id) on delete cascade,
@@ -98,12 +108,14 @@ language sql immutable set search_path = '' as $$
     '[^a-z0-9]+', '-', 'g'))
 $$;
 
--- Só os cinco itens do desafio, sem repetição
+-- Só os itens do desafio, sem repetição. "descanso" é o dia de folga do treino
+-- e conta como treino cumprido; se o treino foi marcado, o descanso sai.
 create or replace function public._itens(p text[]) returns text[]
 language sql immutable set search_path = '' as $$
   select coalesce(array_agg(x order by x), '{}')
   from (select distinct x from unnest(coalesce(p, '{}'::text[])) as x
-        where x in ('dieta', 'treino', 'estudo', 'trabalho', 'oracao')) t
+        where x in ('dieta', 'treino', 'descanso', 'estudo', 'trabalho', 'oracao')
+          and not (x = 'descanso' and 'treino' = any(coalesce(p, '{}'::text[])))) t
 $$;
 
 create or replace function public._sessao(p_token text) returns uuid
@@ -132,7 +144,8 @@ create or replace function public._dados(p_pessoa uuid) returns json
 language sql stable security definer set search_path = '' as $$
   select json_build_object(
     'ok', true,
-    'pessoa', json_build_object('id', p.id, 'nome', p.nome, 'admin', p.admin, 'placar', p.placar),
+    'pessoa', json_build_object('id', p.id, 'nome', p.nome, 'admin', p.admin, 'placar', p.placar,
+                                'treinos_semana', p.treinos_semana, 'dieta', p.dieta),
     'config', (select json_build_object('inicio', c.inicio, 'dias', c.dias,
                                         'codigo', case when p.admin then c.codigo_time end)
                from public.config c where c.id = 1),
@@ -255,6 +268,7 @@ declare
   v  uuid := public._sessao(p_token);
   c  public.config%rowtype;
   it text[];
+  tw int;
 begin
   if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
   if jsonb_typeof(p_itens) <> 'array' then return json_build_object('ok', false, 'erro', 'itens_invalidos'); end if;
@@ -264,6 +278,15 @@ begin
   if p_dia is null or p_dia < c.inicio or p_dia > c.inicio + c.dias - 1
      or p_dia > (now() at time zone 'utc')::date + 1 then
     return json_build_object('ok', false, 'erro', 'dia_invalido');
+  end if;
+  -- descansos por semana (segunda a domingo) = 7 - treinos da semana
+  if 'descanso' = any(it) then
+    select treinos_semana into tw from public.pessoas where id = v;
+    if (select count(*) from public.dias d
+        where d.pessoa_id = v and d.dia <> p_dia and 'descanso' = any(d.itens)
+          and date_trunc('week', d.dia) = date_trunc('week', p_dia)) >= 7 - tw then
+      return json_build_object('ok', false, 'erro', 'limite_descanso');
+    end if;
   end if;
   if cardinality(it) = 0 then
     delete from public.dias where pessoa_id = v and dia = p_dia;
@@ -295,6 +318,19 @@ declare v uuid := public._sessao(p_token);
 begin
   if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
   delete from public.espelho where id = p_id and pessoa_id = v;
+  return json_build_object('ok', true);
+end $$;
+
+create or replace function public.definir_desafio(p_token text, p_treinos int, p_dieta text) returns json
+language plpgsql security definer set search_path = '' as $$
+declare v uuid := public._sessao(p_token); d text := trim(coalesce(p_dieta, ''));
+begin
+  if v is null then return json_build_object('ok', false, 'erro', 'sessao'); end if;
+  if p_treinos is null or p_treinos not in (5, 6) then
+    return json_build_object('ok', false, 'erro', 'treinos_invalido');
+  end if;
+  if char_length(d) > 140 then return json_build_object('ok', false, 'erro', 'dieta_longa'); end if;
+  update public.pessoas set treinos_semana = p_treinos, dieta = d where id = v;
   return json_build_object('ok', true);
 end $$;
 
@@ -394,7 +430,8 @@ revoke execute on function
   public.cadastrar(text, text, text), public.entrar(text, text), public.sair(text),
   public.trocar_pin(text, text, text), public.meus_dados(text), public.salvar_dia(text, date, jsonb),
   public.anotar_espelho(text, date, text, int), public.apagar_espelho(text, uuid),
-  public.definir_placar(text, boolean), public.placar(text), public.ajustar_desafio(text, date, int, text),
+  public.definir_desafio(text, int, text), public.definir_placar(text, boolean), public.placar(text),
+  public.ajustar_desafio(text, date, int, text),
   public.equipe(text), public.zerar_pin(text, uuid, text), public.remover_pessoa(text, uuid)
 from public;
 
@@ -402,6 +439,7 @@ grant execute on function
   public.cadastrar(text, text, text), public.entrar(text, text), public.sair(text),
   public.trocar_pin(text, text, text), public.meus_dados(text), public.salvar_dia(text, date, jsonb),
   public.anotar_espelho(text, date, text, int), public.apagar_espelho(text, uuid),
-  public.definir_placar(text, boolean), public.placar(text), public.ajustar_desafio(text, date, int, text),
+  public.definir_desafio(text, int, text), public.definir_placar(text, boolean), public.placar(text),
+  public.ajustar_desafio(text, date, int, text),
   public.equipe(text), public.zerar_pin(text, uuid, text), public.remover_pessoa(text, uuid)
 to anon, authenticated;

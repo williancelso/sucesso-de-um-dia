@@ -37,6 +37,34 @@ ok(r.config.codigo === 'autentica74' && r.config.inicio === '2026-10-06' && r.co
 const dAna = await call('meus_dados', { p_token: tokAna });
 ok(dAna.config.codigo === null && dAna.pessoa.admin === false, 'quem não é admin não vê o código', dAna.config);
 
+// Meu desafio: treinos por semana, descansos e dieta
+r = await call('meus_dados', { p_token: tokW });
+ok(r.pessoa.treinos_semana === 6 && r.pessoa.dieta === null, 'padrão: 6 treinos por semana e dieta em branco', r.pessoa);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-19', p_itens: ['dieta', 'descanso', 'estudo', 'trabalho', 'oracao'] });
+ok(r.ok, 'descanso vale no lugar do treino', r);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-21', p_itens: ['descanso'] });
+ok(r.erro === 'limite_descanso', 'com 6 treinos só cabe 1 descanso na semana', r);
+r = await call('definir_desafio', { p_token: tokW, p_treinos: 4, p_dieta: 'x' });
+ok(r.erro === 'treinos_invalido', '4 treinos é recusado (só 5 ou 6)', r);
+r = await call('definir_desafio', { p_token: tokW, p_treinos: 7, p_dieta: 'x' });
+ok(r.erro === 'treinos_invalido', '7 treinos é recusado (só 5 ou 6)', r);
+r = await call('definir_desafio', { p_token: tokW, p_treinos: 5, p_dieta: 'x'.repeat(141) });
+ok(r.erro === 'dieta_longa', 'dieta com mais de 140 letras é recusada', r);
+r = await call('definir_desafio', { p_token: tokW, p_treinos: 5, p_dieta: '  Sem açúcar e sem fritura  ' });
+ok(r.ok, 'definir 5 treinos e a dieta', r);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-21', p_itens: ['dieta', 'descanso'] });
+ok(r.ok, 'com 5 treinos cabem 2 descansos na semana', r);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-22', p_itens: ['descanso'] });
+ok(r.erro === 'limite_descanso', 'o terceiro descanso da semana é recusado', r);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-22', p_itens: ['treino', 'descanso', 'dieta'] });
+r = await call('meus_dados', { p_token: tokW });
+ok(JSON.stringify(r.dias['2026-10-22']) === '["dieta","treino"]', 'treino e descanso juntos: fica o treino', r.dias['2026-10-22']);
+ok(r.pessoa.treinos_semana === 5 && r.pessoa.dieta === 'Sem açúcar e sem fritura', 'dieta gravada sem espaços sobrando', r.pessoa);
+r = await call('salvar_dia', { p_token: tokW, p_dia: '2026-10-26', p_itens: ['descanso'] });
+ok(r.ok, 'semana nova libera os descansos de novo', r);
+r = await call('placar', { p_token: tokW });
+ok(r.pessoas[0].d['2026-10-19'] === 5, 'no placar o dia com descanso conta 5 de 5', r.pessoas[0].d['2026-10-19']);
+
 r = await call('entrar', { p_nome: 'WILLIAN CELSO', p_pin: '4321' });
 ok(r.ok && r.token, 'entrar com nome em maiúsculas', r);
 r = await call('entrar', { p_nome: 'Fulano', p_pin: '4321' });

@@ -189,24 +189,27 @@ h2::after{content:"";display:block;width:40px;height:2px;background:var(--dourad
 .desenho{margin-top:60px}
 .etq-ouro{color:var(--dourado)}
 .desenho h2{margin-top:14px}
-.desenho .lead{margin-top:18px;max-width:34rem;font-size:17px}
-.desenho .ilustra{margin:26px 0 0}
-.meditacao{margin-top:22px;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
-.meditacao summary{cursor:pointer;padding:16px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.meditacao summary::-webkit-details-marker{display:none}
-.meditacao summary::after{content:"+";font-weight:300;font-size:24px;line-height:1}
-.meditacao[open] summary::after{content:"–"}
-.med-corpo{padding:6px 0 30px;display:flex;flex-direction:column;gap:18px;max-width:36rem;font-size:15.5px;line-height:1.75}
+.med-abre{margin-top:26px;display:grid;gap:22px;align-items:center}
+.med-abre p{font-size:16px;line-height:1.75}
+.folha-desenho{margin:0}
+.folha-desenho img{display:block;width:100%;height:auto}
+@media (min-width:560px){.med-abre{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:30px}}
+.med-btn{margin-top:20px;font-size:14px}
+.med-btn::after{content:" ↓";text-decoration:none;display:inline-block;margin-left:6px;color:var(--dourado)}
+#medFechar{align-self:flex-start;margin-top:8px}
+#medFechar::after{content:" ↑"}
+.med-corpo{margin-top:22px;padding:24px 0 8px;border-top:1px solid var(--linha);display:flex;flex-direction:column;gap:18px;max-width:36rem;font-size:15.5px;line-height:1.75}
 .oracao{margin:6px 0;padding:24px 4px;border-top:1px solid var(--dourado);border-bottom:1px solid var(--dourado);font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:21px;line-height:1.5;color:var(--azul)}
-.passos{list-style:none;margin:2px 0;padding:0;border-top:1px solid var(--linha)}
+.passos{list-style:none;margin:2px 0;padding:0;border-top:1px solid var(--linha);display:grid}
+@media (min-width:560px){.passos{grid-template-columns:1fr 1fr;column-gap:28px}}
 .passos li{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:0;row-gap:2px;padding:14px 0;border-bottom:1px solid var(--linha);line-height:1.5}
 .passos .num{grid-row:span 2;padding-top:2px}
 .passos strong{font-weight:600;font-size:16px}
 .passos span:last-child{grid-column:2;color:var(--cinza);font-size:14px}
 .pergunta{margin-top:10px;font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:29px;line-height:1.22;color:var(--bordo)}
 .pergunta::before{content:"";display:block;width:14px;height:14px;background:var(--bordo);margin-bottom:18px}
-.sobre{margin-top:44px;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
-.sobre summary{cursor:pointer;padding:16px 0;font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sobre{margin-top:64px;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.sobre summary{cursor:pointer;padding:16px 0;font-size:14px;font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .sobre summary::-webkit-details-marker{display:none}
 .sobre summary::after{content:"+";font-weight:300;font-size:24px;line-height:1}
 .sobre[open] summary::after{content:"–"}
@@ -442,27 +445,28 @@ textarea.pag-texto:focus{border:0}
       <section class="desenho" aria-labelledby="desenhoH">
         <p class="etq etq-ouro">Antes de dormir</p>
         <h2 id="desenhoH">O desenho para Deus</h2>
-        <figure class="ilustra"><img src="img/desenho.jpg" alt="Desenho de criança numa folha: sol, montanha, carro e árvore." width="1200" height="800" loading="lazy"></figure>
-        <details class="meditacao" id="meditacao">
-          <summary>Ler a meditação</summary>
-          <div class="med-corpo">
-            <p>Pense numa menina de sete anos. Na escola, ela faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga o carinho e o esforço que estão ali. E sabe reconhecer, também, o dia em que a filha não caprichou.</p>
-            <p>Você é essa criança, e Deus é o seu Pai. Cada ato do seu dia é um traço do desenho: o carro, a árvore, a montanha, o sol. A oração, o estudo, o trabalho, a dieta e o treino que você marcou aqui também são traços. Pode sair um sol torto, mas feito com carinho, o melhor que você pôde.</p>
-            <p>À noite, na hora da oração, pegue o desenho de hoje:</p>
-            <ol class="passos">
-              <li><span class="num" aria-hidden="true">01</span><strong>Olhe</strong><span>Repasse o dia com honestidade, traço por traço.</span></li>
-              <li><span class="num" aria-hidden="true">02</span><strong>Agradeça</strong><span>Pelo sol e pela montanha que saíram com carinho.</span></li>
-              <li><span class="num" aria-hidden="true">03</span><strong>Peça desculpas</strong><span>Pela árvore que você rabiscou com pressa, sem cuidado.</span></li>
-              <li><span class="num" aria-hidden="true">04</span><strong>Peça ajuda</strong><span>Para fazer um desenho melhor amanhã.</span></li>
-            </ol>
-            <p>Com as suas palavras, ou assim:</p>
-            <blockquote class="oracao">“Pai, eu fiz este desenho para o Senhor. Esta árvore aqui eu rabisquei de qualquer jeito, porque nessa hora eu não estava gostando tanto do Senhor. Mas o sol e a montanha eu fiz com muito carinho. Eu gosto muito do Senhor, mas às vezes me esqueço disso. Me desculpa. Eu tenho preguiça, eu reclamo, eu deixo para depois, eu fico no celular. Eu quero parar de ser assim. Me ajuda a fazer um desenho melhor amanhã, porque sem o Senhor eu não consigo.”</blockquote>
-            <p>Faça isso todas as noites e você vai ver a sua vida melhorar. Vai ver a sua vida ganhar sentido.</p>
-            <p class="pergunta">Qual é o desenho que eu estou entregando para Deus no final do meu dia?</p>
-            <p>Ponha isso na cabeça e você perceberá que os outros problemas ficarão pequenos. Afinal, o que mais importa nesta vida é o que o seu Pai (Deus) acha de você, já que Ele é o único que assiste você o tempo inteiro, que sabe e conhece cada um dos seus sentimentos e cada movimento da sua alma.</p>
-            <p>Repetindo, não se esqueça: não importa o que o outro acha de você. A pergunta interior da sua alma deve ser: “O que Deus acha de mim? O que Ele pensa de mim?”</p>
-          </div>
-        </details>
+        <div class="med-abre">
+          <figure class="folha-desenho"><img src="img/desenho.jpg" alt="Desenho de criança numa folha: sol, montanha, carro e árvore." width="900" height="695" loading="lazy"></figure>
+          <p>Pense numa menina de sete anos. Na escola, ela faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga o carinho e o esforço que estão ali. E sabe reconhecer, também, o dia em que a filha não caprichou.</p>
+        </div>
+        <button type="button" class="link med-btn" id="medAbrir" aria-expanded="false" aria-controls="meditacao">Continuar a leitura</button>
+        <div class="med-corpo" id="meditacao" hidden>
+          <p>Você é essa criança, e Deus é o seu Pai. Cada ato do seu dia é um traço do desenho: o carro, a árvore, a montanha, o sol. A oração, o estudo, o trabalho, a dieta e o treino que você marcou aqui também são traços. Pode sair um sol torto, mas feito com carinho, o melhor que você pôde.</p>
+          <p>À noite, na hora da oração, pegue o desenho de hoje:</p>
+          <ol class="passos">
+            <li><span class="num" aria-hidden="true">01</span><strong>Olhe</strong><span>Repasse o dia com honestidade, traço por traço.</span></li>
+            <li><span class="num" aria-hidden="true">02</span><strong>Agradeça</strong><span>Pelo sol e pela montanha que saíram com carinho.</span></li>
+            <li><span class="num" aria-hidden="true">03</span><strong>Peça desculpas</strong><span>Pela árvore que você rabiscou com pressa, sem cuidado.</span></li>
+            <li><span class="num" aria-hidden="true">04</span><strong>Peça ajuda</strong><span>Para fazer um desenho melhor amanhã.</span></li>
+          </ol>
+          <p>Com as suas palavras, ou assim:</p>
+          <blockquote class="oracao">“Pai, eu fiz este desenho para o Senhor. Esta árvore aqui eu rabisquei de qualquer jeito, porque nessa hora eu não estava gostando tanto do Senhor. Mas o sol e a montanha eu fiz com muito carinho. Eu gosto muito do Senhor, mas às vezes me esqueço disso. Me desculpa. Eu tenho preguiça, eu reclamo, eu deixo para depois, eu fico no celular. Eu quero parar de ser assim. Me ajuda a fazer um desenho melhor amanhã, porque sem o Senhor eu não consigo.”</blockquote>
+          <p>Faça isso todas as noites e você vai ver a sua vida melhorar. Vai ver a sua vida ganhar sentido.</p>
+          <p class="pergunta">Qual é o desenho que eu estou entregando para Deus no final do meu dia?</p>
+          <p>Ponha isso na cabeça e você perceberá que os outros problemas ficarão pequenos. Afinal, o que mais importa nesta vida é o que o seu Pai (Deus) acha de você, já que Ele é o único que assiste você o tempo inteiro, que sabe e conhece cada um dos seus sentimentos e cada movimento da sua alma.</p>
+          <p>Repetindo, não se esqueça: não importa o que o outro acha de você. A pergunta interior da sua alma deve ser: “O que Deus acha de mim? O que Ele pensa de mim?”</p>
+          <button type="button" class="link med-btn" id="medFechar">Recolher a meditação</button>
+        </div>
       </section>
 
       <details class="sobre" id="sobre">
@@ -1198,6 +1202,12 @@ function bind(){
   $('#formCadastro').addEventListener('submit',fazerCadastro);
   $('#irCadastro').addEventListener('click',()=>{erroLogin('l','');mostrarLogin('cadastro');const n=$('#lNome').value.trim();if(n&&!$('#cNome').value)$('#cNome').value=n;$('#cNome').focus()});
   $('#irEntrar').addEventListener('click',()=>{erroLogin('c','');mostrarLogin();$('#lNome').focus()});
+  const abrirMeditacao=aberta=>{
+    $('#meditacao').hidden=!aberta;$('#medAbrir').hidden=aberta;$('#medAbrir').setAttribute('aria-expanded',String(aberta));
+    if(!aberta){$('#desenhoH').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#medAbrir').focus({preventScroll:true})}
+  };
+  $('#medAbrir').addEventListener('click',()=>abrirMeditacao(true));
+  $('#medFechar').addEventListener('click',()=>abrirMeditacao(false));
   $('#sair').addEventListener('click',sair);
   $('#sair2').addEventListener('click',sair);
   $('#abrirDesafio').addEventListener('click',()=>{setTab('conta');window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'})});

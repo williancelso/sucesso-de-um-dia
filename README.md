@@ -18,16 +18,18 @@ O app é uma página só (`index.html`) que conversa com um banco no Supabase.
 4. Em outra query, cole o arquivo `supabase/02-importar-willian.sql` e clique em **Run**. Ele traz os 25 dias do Willian do app antigo e o deixa como administrador.
 5. Em **Project Settings → API**, copie a **Project URL** e a chave pública (**anon** ou **publishable**).
 
+> Já feito em 31/10/2026: projeto `sucesso-de-um-dia` (São Paulo, plano gratuito), com os dois SQLs rodados.
+
 ### 2. Ligar o app ao banco
 
-No `index.html`, troque as duas linhas do começo do script:
+No `index.html`, as duas linhas do começo do script apontam para o projeto:
 
 ```js
-const SUPABASE_URL='COLE_AQUI_A_URL_DO_SUPABASE';
-const SUPABASE_KEY='COLE_AQUI_A_CHAVE_PUBLICA';
+const SUPABASE_URL='https://zromhsngincjsaygrdkk.supabase.co';
+const SUPABASE_KEY='sb_publishable_…';
 ```
 
-As duas são públicas por natureza. Quem protege os dados são as funções do banco.
+As duas são públicas por natureza. Quem protege os dados são as funções do banco. Se um dia trocar de projeto, troque essas duas linhas.
 
 ### 3. Publicar
 

@@ -194,6 +194,11 @@ h2::after{content:"";display:block;width:40px;height:2px;background:var(--dourad
 .meditacao[open] summary::after{content:"–"}
 .med-corpo{padding:6px 0 30px;display:flex;flex-direction:column;gap:18px;max-width:36rem;font-size:15.5px;line-height:1.75}
 .oracao{margin:6px 0;padding:24px 4px;border-top:1px solid var(--dourado);border-bottom:1px solid var(--dourado);font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:21px;line-height:1.5;color:var(--azul)}
+.passos{list-style:none;margin:2px 0;padding:0;border-top:1px solid var(--linha)}
+.passos li{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:0;row-gap:2px;padding:14px 0;border-bottom:1px solid var(--linha);line-height:1.5}
+.passos .num{grid-row:span 2;padding-top:2px}
+.passos strong{font-weight:600;font-size:16px}
+.passos span:last-child{grid-column:2;color:var(--cinza);font-size:14px}
 .pergunta{margin-top:10px;font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:29px;line-height:1.22;color:var(--bordo)}
 .pergunta::before{content:"";display:block;width:14px;height:14px;background:var(--bordo);margin-bottom:18px}
 .assinatura{margin-top:8px;font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:25px;line-height:1.3;color:var(--bordo)}
@@ -402,15 +407,21 @@ input:disabled,textarea:disabled{opacity:.55}
         <details class="meditacao" id="meditacao">
           <summary>Ler a meditação</summary>
           <div class="med-corpo">
-            <p>Pense numa menina de sete anos. Ela ainda não desenha como profissional. Na escola, faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga se ela colocou carinho e esforço ali. E, como mãe, também sabe reconhecer o dia em que a filha não caprichou. A gente sabe quando a criança deu o melhor dela e quando não deu.</p>
-            <p>Você é filho de Deus. Você é essa criança. Cada ato do seu dia é um pedacinho do desenho: a rodinha do carro, a arvorezinha, a montanha, o sol. Cada ato pode ser feito com carinho e vontade. Pode sair um sol torto e feio, mas feito com carinho, o melhor que você pôde.</p>
-            <p>No fim do dia, na hora da oração, você pega esse desenho e diz:</p>
-            <blockquote class="oracao">“Pai, eu fiz este desenho para o Senhor. Esta rodinha aqui eu fiz de qualquer jeito, porque nessa hora eu não estava gostando tanto do Senhor. Mas o sol e a montanha eu fiz com muito carinho. Eu gosto muito do Senhor, mas às vezes me esqueço disso. Me desculpa. Me ajuda a fazer um desenho melhor amanhã, porque eu não consigo sozinho. Eu tenho preguiça, eu reclamo, eu deixo para depois, eu fico no Instagram, eu reclamo para acordar cedo. Me desculpa. Eu quero parar de ser assim. Me ajuda.”</blockquote>
-            <p>Você vai ver a sua vida melhorar. Vai ver a sua vida ganhar sentido.</p>
+            <p>Pense numa menina de sete anos. Na escola, ela faz um desenho e leva para a mãe: “Olha, mamãe, o que eu fiz para você.” Tecnicamente, o desenho é horroroso. Mas a mãe enxerga o carinho e o esforço que estão ali. E sabe reconhecer, também, o dia em que a filha não caprichou.</p>
+            <p>Você é essa criança, e Deus é o seu Pai. Cada ato do seu dia é um traço do desenho: a rodinha do carro, a arvorezinha, a montanha, o sol. A dieta, o treino, o estudo, o trabalho e a oração que você marcou aqui também são traços. Pode sair um sol torto, mas feito com carinho, o melhor que você pôde.</p>
+            <p>À noite, na hora da oração, pegue o desenho de hoje:</p>
+            <ol class="passos">
+              <li><span class="num" aria-hidden="true">01</span><strong>Olhe</strong><span>Repasse o dia com honestidade, traço por traço.</span></li>
+              <li><span class="num" aria-hidden="true">02</span><strong>Agradeça</strong><span>Pelo sol e pela montanha que saíram com carinho.</span></li>
+              <li><span class="num" aria-hidden="true">03</span><strong>Peça desculpas</strong><span>Pela rodinha que você fez de qualquer jeito.</span></li>
+              <li><span class="num" aria-hidden="true">04</span><strong>Peça ajuda</strong><span>Para fazer um desenho melhor amanhã.</span></li>
+            </ol>
+            <p>Com as suas palavras, ou assim:</p>
+            <blockquote class="oracao">“Pai, eu fiz este desenho para o Senhor. Esta rodinha aqui eu fiz de qualquer jeito, porque nessa hora eu não estava gostando tanto do Senhor. Mas o sol e a montanha eu fiz com muito carinho. Eu gosto muito do Senhor, mas às vezes me esqueço disso. Me desculpa. Eu tenho preguiça, eu reclamo, eu deixo para depois, eu fico no celular. Eu quero parar de ser assim. Me ajuda a fazer um desenho melhor amanhã, porque sem o Senhor eu não consigo.”</blockquote>
+            <p>Faça isso todas as noites e você vai ver a sua vida melhorar. Vai ver a sua vida ganhar sentido.</p>
             <p class="pergunta">Qual é o desenho que eu estou entregando para Deus no final do meu dia?</p>
-            <p>Ponha isso na cabeça. O resto fica pequeno. Estou preocupado com o que o meu Pai acha de mim.</p>
-            <p>Durmam bem. Rezem antes de dormir. Meditem sobre o desenho de hoje. Peçam desculpas pela rodinha que não saiu bonita, e peçam ajuda para fazer uma melhor amanhã. Não tem muito segredo.</p>
-            <p class="assinatura">Fiquem com Deus.<br>Willian Celso</p>
+            <p>Ponha isso na cabeça e o resto fica pequeno. O que importa é o que o meu Pai acha de mim.</p>
+            <p class="assinatura">Durma bem. Fique com Deus.<br>Willian Celso</p>
           </div>
         </details>
       </section>

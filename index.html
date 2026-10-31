@@ -384,7 +384,7 @@ textarea.pag-texto:focus{border:0}
     </div>
     <div id="loginCadastro" hidden>
       <h2>Primeiro acesso</h2>
-      <p class="lead">Você vai criar um PIN de 4 dígitos, só números. Ele protege as suas marcações e o seu Espelho.</p>
+      <p class="lead">Você vai criar um PIN de 4 dígitos, só números. Ele protege as suas marcações e o seu Diário.</p>
       <form class="form" id="formCadastro" novalidate>
         <div class="field"><label for="cNome">Nome e sobrenome</label><input type="text" id="cNome" autocomplete="username" autocapitalize="words" spellcheck="false" maxlength="60"></div>
         <div class="field"><label for="cPin">Crie um PIN de 4 dígitos</label><input type="password" id="cPin" class="pin" inputmode="numeric" autocomplete="new-password" maxlength="4" pattern="[0-9]*"></div>
@@ -401,7 +401,7 @@ textarea.pag-texto:focus{border:0}
   <div id="app" hidden>
     <div class="tabs" role="tablist" aria-label="Seções" id="tabs">
       <button type="button" role="tab" id="tab-hoje" aria-controls="p-hoje" aria-selected="true">Hoje</button>
-      <button type="button" role="tab" id="tab-espelho" aria-controls="p-espelho" aria-selected="false" tabindex="-1">Espelho</button>
+      <button type="button" role="tab" id="tab-espelho" aria-controls="p-espelho" aria-selected="false" tabindex="-1">Diário</button>
       <button type="button" role="tab" id="tab-time" aria-controls="p-time" aria-selected="false" tabindex="-1">Time</button>
     </div>
 
@@ -470,18 +470,18 @@ textarea.pag-texto:focus{border:0}
           <p>A vontade é uma lanterna que, de fábrica, aponta para o que é fácil: gula, preguiça, ira. Cada hábito é virar essa lanterna, com força, para as virtudes. É daí que vem a força de vontade.</p>
           <p>Você treina 5 ou 6 vezes por semana. Nos dias de folga, marque o descanso: ele vale como treino cumprido.</p>
           <p>Fez os cinco? O dia está vencido. Você venceu a si mesmo. À noite, na oração, entregue o seu desenho a Deus.</p>
-          <p>No Espelho fica o seu diário autobiográfico: uma página por dia para confessar, refletir e analisar o seu dia com extrema honestidade.</p>
+          <p>No Diário, uma página por dia para confessar, refletir e analisar o seu dia com extrema honestidade.</p>
         </div>
       </details>
     </section>
 
     <section id="p-espelho" role="tabpanel" aria-labelledby="tab-espelho" hidden>
       <div class="panel-h">
-        <h2>Espelho</h2>
+        <h2>Diário autobiográfico</h2>
         <p class="lead">A cada mentira que você conta para si, a sua personalidade se quebra um pouco mais, como um espelho que trinca.</p>
       </div>
       <figure class="ilustra"><img src="img/espelho.jpg" alt="Espelho antigo com trincas finas." width="1200" height="800" loading="lazy"></figure>
-      <p class="esp-guia">Este é o seu diário autobiográfico: um lugar para confessar, refletir e analisar o seu dia com extrema honestidade, mesmo nas pequenas coisas. Uma página por dia.</p>
+      <p class="esp-guia">Um lugar para confessar, refletir e analisar o seu dia com extrema honestidade, mesmo nas pequenas coisas. Uma página por dia.</p>
       <p class="priv">Só você lê este diário. Ninguém do time, nem o placar.</p>
 
       <article class="pagina" aria-labelledby="pagData">
@@ -543,7 +543,7 @@ textarea.pag-texto:focus{border:0}
 
       <div class="optin">
         <label class="switch" for="optPlacar"><input type="checkbox" id="optPlacar" role="switch" checked><span>Aparecer no placar</span></label>
-        <p class="hint">O time vê só quantos dos 5 você marcou em cada dia, nunca quais. O Espelho nunca aparece aqui.</p>
+        <p class="hint">O time vê só quantos dos 5 você marcou em cada dia, nunca quais. O Diário nunca aparece aqui.</p>
       </div>
 
       <ol class="board" id="board"></ol>
@@ -560,7 +560,7 @@ textarea.pag-texto:focus{border:0}
         </form>
 
         <h3 style="margin-top:36px">Pessoas</h3>
-        <p class="hint">Zere o PIN de quem esqueceu (a pessoa entra com o PIN novo e pode trocar depois) ou remova um cadastro. Remover apaga também os dias e o Espelho da pessoa.</p>
+        <p class="hint">Zere o PIN de quem esqueceu (a pessoa entra com o PIN novo e pode trocar depois) ou remova um cadastro. Remover apaga também os dias e o Diário da pessoa.</p>
         <ul class="pessoas" id="pessoas"></ul>
       </section>
     </section>
@@ -705,7 +705,7 @@ const ERROS={
   codigo_invalido:'Código do time incorreto.',
   dia_invalido:'Esse dia está fora do desafio.',
   anotacao_invalida:'Escreva a anotação e o tempo, de 1 a 1440 minutos.',
-  limite:'O Espelho chegou ao limite de anotações. Apague as mais antigas.',
+  limite:'O Diário chegou ao limite de anotações. Apague as mais antigas.',
   texto_longo:'A página chegou ao limite de 20 mil letras.',
   min_invalido:'O tempo perdido vai de 0 a 1440 minutos.',
   sem_permissao:'Só administradores podem fazer isso.',
@@ -1006,7 +1006,7 @@ function renderFolha(){
     g.append(cell);
   }
 }
-/* ---------- Diário autobiográfico (aba Espelho): uma página por dia, guardada sozinha ---------- */
+/* ---------- Diário autobiográfico (aba Diário): uma página por dia, guardada sozinha ---------- */
 const PAG={dia:null,texto:'',min:null,carregado:false,sujo:false,gravando:false,denovo:false,timer:null,versao:0};
 function cleanDiario(a){if(!Array.isArray(a))return[];return a.filter(d=>d&&validKey(d.dia)).map(d=>({dia:d.dia,resumo:String(d.resumo||''),min:Number(d.min)||0,tam:Number(d.tam)||0}))}
 const chaveRascunho=dia=>(S.pessoa&&S.pessoa.id)+'|'+dia;

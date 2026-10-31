@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sucesso-local",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["dev/servidor-local.mjs"],
+      "port": 8741
+    }
+  ]
+}

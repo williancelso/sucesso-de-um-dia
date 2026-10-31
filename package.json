@@ -1,0 +1,13 @@
+{
+  "name": "sucesso-de-um-dia",
+  "private": true,
+  "type": "module",
+  "description": "App do desafio Sucesso de um Dia (Autentica): checklist diário, Espelho e placar do time, com login por nome e PIN.",
+  "scripts": {
+    "local": "node dev/servidor-local.mjs",
+    "test": "node dev/teste-sql.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.14"
+  }
+}

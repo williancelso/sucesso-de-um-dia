@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+# Progresso pessoal importado do app antigo: roda uma vez no Supabase e não vai para o repositório
+supabase/02-importar-*.sql
